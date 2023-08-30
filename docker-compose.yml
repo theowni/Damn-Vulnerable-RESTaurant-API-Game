@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8080 --workers 1 --reload"
+    volumes:
+      - ./app/:/app/
+      - /app/.venv
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=restaurant
+  db:
+    image: postgres:15.4-alpine
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=restaurant
+    expose: 
+      - 5432
