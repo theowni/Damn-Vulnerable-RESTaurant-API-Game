@@ -1,13 +1,6 @@
 import json
 
-import pytest
-from apis.menu.service import router
-from conftest import app
-from db.models import MenuItem, User, UserRole
-from db.session import get_db
-from fastapi import Depends
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
+from db.models import User, UserRole
 
 
 def test_privilege_escalation(test_db, customer_client):

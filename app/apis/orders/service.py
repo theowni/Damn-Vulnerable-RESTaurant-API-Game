@@ -2,7 +2,7 @@ from typing import List
 
 from apis.auth.utils import RolesBasedAuthChecker, get_current_user
 from apis.orders import schemas
-from db.models import MenuItem, Order, OrderStatus, User, UserRole, order_items
+from db.models import MenuItem, Order, User, UserRole, order_items
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session

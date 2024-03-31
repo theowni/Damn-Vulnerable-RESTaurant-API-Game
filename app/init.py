@@ -7,7 +7,6 @@ from apis.menu.utils import create_menu_item
 from config import settings
 from db.models import User, UserRole
 from db.session import get_db
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
 

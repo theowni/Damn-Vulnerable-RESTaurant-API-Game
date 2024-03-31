@@ -1,13 +1,6 @@
 import json
 
-import pytest
-from apis.menu.service import router
-from conftest import app
 from db.models import MenuItem
-from db.session import get_db
-from fastapi import Depends
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 
 
 def test_get_menu_returns_200_with_data(test_db, anon_client):

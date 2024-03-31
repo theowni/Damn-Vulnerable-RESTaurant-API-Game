@@ -1,14 +1,5 @@
-import base64
-import json
 
-import pytest
-from apis.menu.service import router
-from conftest import app
-from db.models import MenuItem, User, UserRole
-from db.session import get_db
-from fastapi import Depends
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
+from db.models import User, UserRole
 
 
 def test_get_token_returns_token_with_200(test_db, customer_client):
@@ -110,7 +101,7 @@ def test_register_user_returns_201(test_db, anon_client):
 
 def test_register_by_authenticated_user_returns_400(test_db, customer_client, mocker):
     mocker.patch(
-        "apis.auth.service.OAuth2PasswordBearer",
+        "apis.auth.utils.OAuth2PasswordBearer",
         return_value=lambda x: lambda y: "token",
     )
     mocker.patch(

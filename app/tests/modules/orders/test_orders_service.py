@@ -1,7 +1,5 @@
-from apis.orders.schemas import OrderCreate
 from db.models import MenuItem, Order
 from fastapi import status
-from sqlalchemy.orm import Session
 
 
 def test_create_order_succesfully_returns_201(customer_client, test_db):

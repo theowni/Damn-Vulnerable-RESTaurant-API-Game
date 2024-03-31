@@ -1,9 +1,5 @@
-from typing import Union
 
 from apis.router import api_router
-from db.base import Base
-from db.models import *
-from db.session import engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from init import load_initial_data

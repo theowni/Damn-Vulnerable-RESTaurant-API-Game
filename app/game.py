@@ -3,7 +3,7 @@ import subprocess
 from os import listdir
 from os.path import isfile, join
 
-from colorama import Back, Fore, Style
+from colorama import Fore, Style
 
 BASE_PATH = "app"
 TESTS_DIR = "tests/vulns/"
@@ -74,7 +74,8 @@ def print_level_description(test_file_path):
 
     full_test_file_path = join(BASE_PATH, test_file_path)
     print(
-        f"Test file confirming the vulnerability:\n    {full_test_file_path}", end="\n\n\n"
+        f"Test file confirming the vulnerability:\n    {full_test_file_path}",
+        end="\n\n\n",
     )
 
 
@@ -94,7 +95,8 @@ def print_welcome_screen():
             restaurant located across the street.
 
             The attackers left tests confirming the exploits that they
-            used to gain access to the system.
+            used to gain access to the system. You can read these tests
+            to understand the vulnerability better but don't modify them.
 
             Your task is to fix the vulnerabilities to make sure that those
             malicious tests are no longer passing. In next steps, you will

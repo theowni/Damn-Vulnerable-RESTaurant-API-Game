@@ -7,7 +7,7 @@ from apis.auth.utils import get_current_user, update_user_password
 from config import settings
 from db.models import User, UserRole
 from db.session import get_db
-from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 

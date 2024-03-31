@@ -1,7 +1,5 @@
-from enum import Enum
-from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class UserRoleUpdate(BaseModel):

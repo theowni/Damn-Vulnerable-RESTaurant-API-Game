@@ -1,5 +1,4 @@
-from datetime import datetime, timedelta, timezone
-from typing import Any, Union
+from datetime import timedelta
 
 from apis.auth.exceptions import UserAlreadyExistsException
 from apis.auth.schemas import Token, UserCreate, UserRead, UserUpdate
@@ -8,17 +7,12 @@ from apis.auth.utils import (
     create_access_token,
     create_user,
     get_current_user,
-    get_password_hash,
     update_user,
 )
-from db.models import User, UserRole
+from db.models import User
 from db.session import get_db
-from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Request, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from pydantic import BaseModel
-from sqlalchemy import orm
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 

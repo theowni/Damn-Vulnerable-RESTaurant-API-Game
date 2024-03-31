@@ -2,7 +2,7 @@ from apis.auth.utils import get_current_user, update_user
 from apis.users.schemas import UserRoleUpdate
 from db import models
 from db.session import get_db
-from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing_extensions import Annotated
 
