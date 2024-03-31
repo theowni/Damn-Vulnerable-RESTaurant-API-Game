@@ -28,7 +28,7 @@ cd Damn-Vulnerable-Restaurant-API-Game
 
 At this point, the application is running locally. You can take a look at **step 3** in next section for more details about accessing the API and documentation.
 
-## Running the Application - CTF Approach
+## Running the Application - Ethical Hackers Approach
 
 You can open RESTaurant easily just with a few steps, you don't need to have a large budget, rented place, cooks or waitress...
 
