@@ -83,7 +83,7 @@ def print_welcome_screen():
     print(Fore.GREEN, end="")
     print(
         """
-            Welcome to Damn Vulnerable Restaurant!
+            Welcome to Damn Vulnerable RESTaurant!
 
             Our restaurant was recently attacked by unknown threat actor!
             The restaurant's API and underlying system were compromised by 

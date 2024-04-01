@@ -26,8 +26,8 @@ Configuring a development environment is a straightforward process assuming that
 
 2. Clone the repository and change directory to the project root:
     ```sh
-    git clone https://github.com/theowni/Damn-Vulnerable-Restaurant-API-Game.git
-    cd Damn-Vulnerable-Restaurant-API-Game
+    git clone https://github.com/theowni/Damn-Vulnerable-RESTaurant-API-Game.git
+    cd Damn-Vulnerable-RESTaurant-API-Game
     ```
 
 3. Install Poetry:

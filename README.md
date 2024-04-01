@@ -17,8 +17,8 @@ For developers, I created a dedicated game where you can identify and fix vulner
 
 2. Start the game by executing the following commands:
 ```sh
-git clone https://github.com/theowni/Damn-Vulnerable-Restaurant-API-Game.git
-cd Damn-Vulnerable-Restaurant-API-Game
+git clone https://github.com/theowni/Damn-Vulnerable-RESTaurant-API-Game.git
+cd Damn-Vulnerable-RESTaurant-API-Game
 ./start_game.sh
 ```
 3. You should observe the following screen:
@@ -39,8 +39,8 @@ You just need to find a Chef and follow the steps:
 2. Deploy RESTaurant locally with Docker by executing the following commands:
 
     ```sh
-    git clone https://github.com/theowni/Damn-Vulnerable-Restaurant-API-Game.git
-    cd Damn-Vulnerable-Restaurant-API-Game
+    git clone https://github.com/theowni/Damn-Vulnerable-RESTaurant-API-Game.git
+    cd Damn-Vulnerable-RESTaurant-API-Game
     ./start_app.sh
     ```
 
