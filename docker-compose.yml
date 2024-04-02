@@ -10,8 +10,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     privileged: true
     cap_add:
       - SYS_ADMIN
