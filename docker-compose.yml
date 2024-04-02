@@ -10,7 +10,8 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     privileged: true
     cap_add:
       - SYS_ADMIN
@@ -28,5 +29,9 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=restaurant
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      start_period: 5s
     expose: 
       - 5432
