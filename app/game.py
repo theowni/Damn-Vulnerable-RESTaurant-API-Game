@@ -162,7 +162,7 @@ for i, level_test_file in enumerate(TEST_FILES_PATHS, start=1):
 
     if is_fixed:
         print_color_text(
-            f"Congratulations! You fixed the \"{vuln_name}\" vulnerability!",
+            f'Congratulations! You fixed the "{vuln_name}" vulnerability!',
             color=Fore.GREEN,
             end="\n",
         )
@@ -187,7 +187,7 @@ Fix the vulnerability and press any key to validate the fix...""",
                 move_cursor_top(2)
 
         print_color_text(
-            f"Congratulations! You fixed the \"{vuln_name}\" vulnerability!",
+            f'Congratulations! You fixed the "{vuln_name}" vulnerability!',
             color=Fore.GREEN,
             end="\n\n",
         )

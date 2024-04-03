@@ -7,7 +7,7 @@ def test_unrestricted_menu_item_deletion(test_db, customer_client):
         The previous vulnerability was just a low severity issue but
         allowed me to understand the application's technology better.
 
-        After several minutes with the app, I already found much more 
+        After several minutes with the app, I already found much more
         interesting vulnerability!
         It looks like Chef forgot to add authorisation checks to "/menu/{id}"
         API endpoint and anyone can use DELETE method to delete items
@@ -16,8 +16,8 @@ def test_unrestricted_menu_item_deletion(test_db, customer_client):
     Possible fix:
         Probably, it could be fixed in "delete_menu_item" function in
         "apis/menu/service.py" file by adding auth=Depends(...) with proper
-        roles checks. 
-        There is an example implementation of authorisation checks in 
+        roles checks.
+        There is an example implementation of authorisation checks in
         "update_menu_item" function.
     """
 

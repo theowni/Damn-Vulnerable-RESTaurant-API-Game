@@ -1,6 +1,3 @@
-
-
-
 def test_rce(test_db, chef_client):
     """
     Note:
