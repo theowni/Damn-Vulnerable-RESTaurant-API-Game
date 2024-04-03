@@ -54,14 +54,14 @@ Configuring a development environment is a straightforward process assuming that
 
 ## Running Tests
 ```sh
-docker-compose build
-docker-compose run web pytest .
+docker compose build
+docker compose run web pytest .
 ```
 
 
 ## Generating Alembic Migrations
 Changes in database models need to be reflected in migrations via Alembic. Migrations can be created via:
 ```sh
-docker-compose build
-docker-compose run web alembic revision --autogenerate -m 'changes description'
+docker compose build
+docker compose run web alembic revision --autogenerate -m 'changes description'
 ```

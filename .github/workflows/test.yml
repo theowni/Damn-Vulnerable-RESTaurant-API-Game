@@ -38,8 +38,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build docker images
-        run: docker-compose build
+        run: docker compose build
 
       # Testing if environment can be created with Docker Compose
       - name: Run tests
-        run: docker-compose run web pytest
+        run: docker compose run web pytest
