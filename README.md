@@ -13,7 +13,7 @@ It's a training playground:
 
 For developers, I created a dedicated game where you can identify and fix vulnerabilities in FastAPI based app in an interactive way.
 
-1. Install Docker following [official documentation](https://www.docker.com/get-started/).
+1. Install [Docker](https://www.docker.com/get-started/) and [Docker Compose V2](https://docs.docker.com/compose/install/).
 
 2. Start the game by executing the following commands:
 ```sh
@@ -34,7 +34,7 @@ You can open RESTaurant easily just with a few steps, you don't need to have a l
 
 You just need to find a Chef and follow the steps:
 
-1. Install Docker following [official documentation](https://www.docker.com/get-started/).
+1. Install [Docker](https://www.docker.com/get-started/) and [Docker Compose V2](https://docs.docker.com/compose/install/).
 
 2. Deploy RESTaurant locally with Docker by executing the following commands:
 
