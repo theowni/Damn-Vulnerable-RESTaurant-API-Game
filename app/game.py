@@ -9,7 +9,11 @@ from colorama import Fore, Style
 BASE_PATH = "app"
 VULNS_TESTS_DIR = "tests/vulns/"
 VULNS_TEST_FILES_PATHS = sorted(
-    [join(VULNS_TESTS_DIR, f) for f in listdir(VULNS_TESTS_DIR) if isfile(join(VULNS_TESTS_DIR, f))]
+    [
+        join(VULNS_TESTS_DIR, f)
+        for f in listdir(VULNS_TESTS_DIR)
+        if isfile(join(VULNS_TESTS_DIR, f))
+    ]
 )
 
 
@@ -23,7 +27,9 @@ def run_tests(test_file_path=None):
         if test_file_path:
             command.append(test_file_path)
 
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
         animation = "|/-\\"
         idx = 0
         while process.poll() is None:
@@ -32,7 +38,7 @@ def run_tests(test_file_path=None):
             time.sleep(0.1)
 
         stdout, stderr = process.communicate()
-                    
+
     except subprocess.CalledProcessError as e:
         print(f"Subprocess error: {e}")
     except Exception as e:
@@ -209,7 +215,7 @@ for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
             )
             logs_lines_count = unit_tests_result_out.count("\n\r")
             print_color_text(
-                f'The vulnerability seems to be fixed! However, the feature is not working correctly! Check the above unit tests logs...',
+                f"The vulnerability seems to be fixed! However, the feature is not working correctly! Check the above unit tests logs...",
                 color=Fore.RED,
                 end="\n\r",
             )
@@ -217,7 +223,7 @@ for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
                 "Fix the issue and press any key to validate...",
                 end="\r\r",
             )
-            move_cursor_top(logs_lines_count+4)
+            move_cursor_top(logs_lines_count + 4)
         elif not is_vuln_fixed:
             if first_try:
                 press_key_to_continue(
