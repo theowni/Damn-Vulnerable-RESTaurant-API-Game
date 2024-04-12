@@ -24,14 +24,14 @@ Follow one or both of the following flows to submit your solution, depending on 
 #### Fixed All Vulns Achievement Submission:
 1. Fork this repository and push all your solutions there.
 2. Create a PR to this repository by adding yourself at the end of the list shown above.
-   * Use [PR submission template](.github/work/PULL_REQUEST_TEMPLATE/solution_submission_pull_request_template.md) for PR description.
+   * Use [PR submission template](.github/PULL_REQUEST_TEMPLATE/solution_submission_pull_request_template.md) for PR description.
    * Make sure that you performed all actions included in a checklist shown in the submission template.
 3. Wait for your PR to be reviewed.
 
 #### Root Access Achievement Submission:
 1. Create a PR to this repository.
 2. Create a short write-up describing the vulnerabilities and how you were able to exploit them to achieve root access.
-   * Use [PR submission template](.github/work/PULL_REQUEST_TEMPLATE/solution_submission_pull_request_template.md) for PR description.
+   * Use [PR submission template](.github/PULL_REQUEST_TEMPLATE/solution_submission_pull_request_template.md) for PR description.
    * The write-up can be included in the PR description or in an external publication (e.g. blog).
    * In case of a write-up created in the PR, ensure that the solution column contains a link to the PR when it's created.
    * Make sure that you performed all actions included in a checklist shown in the submission template.
