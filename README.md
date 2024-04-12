@@ -9,7 +9,7 @@ It's a training playground:
 * **For Ethical Hackers** - exploit vulnerabilities manually or use automated tools. Treat it as a CTF challenge, you can start from low privileged API user and escalate to root user. There is one path to achieve this. API docs are provided to facilitate your hacking adventure.
 * **For Security Engineers** - utilise various security automation tools such as SAST, DAST, IaC, etc., to test vulnerability detection mechanisms.
 
-## 🏆 Hall Of Fame
+## 🏆 Hall of Fame
 Participants who were able to complete this challenge are listed in [Hall of Fame](HALL_OF_FAME.md). Submit your solution and become one of them!
 
 ## 🚀 Starting the Game - Developers Approach
