@@ -12,7 +12,13 @@ It's a training playground:
 ## 🏆 Hall of Fame
 Participants who were able to complete this challenge are listed in [Hall of Fame](HALL_OF_FAME.md). Submit your solution and become one of them!
 
-## 🚀 Starting the Game - Developers Approach
+## 🚀 Starting the Game
+
+The application can be launched locally in two alternative ways: **Developers** can play an interactive game where they will investigate and fix vulnerabilities, or **Ethical Hackers** can identify and exploit vulnerabilities. Furthermore, [GitHub Codespaces](https://github.com/features/codespaces) can be used to run the application easily without a local environment! GitHub Codespaces offers up to 60 hours a month for free.
+
+The following sections present how to start the game.
+
+### 👨‍💻 Developers Approach
 
 For developers, I created a dedicated game where you can identify and fix vulnerabilities in FastAPI based app in an interactive way.
 
@@ -31,7 +37,7 @@ cd Damn-Vulnerable-RESTaurant-API-Game
 
 At this point, the application is running locally. You can take a look at **step 3** in next section for more details about accessing the API and documentation.
 
-## 👾 Running the Application - Ethical Hackers Approach
+### 👾 Ethical Hackers Approach
 
 You can open RESTaurant easily just with a few steps, you don't need to have a large budget, rented place, cooks or waitress...
 
@@ -59,6 +65,19 @@ Data will persist between stops and starts.
 
 You're ready to serve the dishes now, **make the Chef mad by exploiting vulns** or **make the Chef happy by fixing them**!
 
+### ☁️ Launch in Github Codespaces
+
+To launch the game in [GitHub Codespaces](https://github.com/features/codespaces), follow the steps:
+1. Click on:
+[![Damn Vulnerable RESTaurant Logo](images/codespace-open-button.png)](https://github.com/new?template_owner=theowni&template_name=Damn-Vulnerable-RESTaurant-API-Game&owner=%40me&name=Damn-Vulnerable-RESTaurant-API-Game&description=My+clone+of+Damn+Vulnerable+RESTaurant+API+Game&visibility=public)
+
+2. To create a codespace, click the **Code** green drop down button in the upper-right of your repository navigation bar.
+3. Click the **Create codespace on main**.
+4. After creating a codespace, you can execute `./start_game.sh` or `./start_app.sh` respectively in the terminal and follow instructions presented in previous sections.
+5. The application can be accessed via a dedicated link. Example codespace environment is shown below (take a look at web app URL scheme): 
+
+![Damn Vulnerable RESTaurant Logo](images/codespace-screenshot-2.png)
+
 ## 🛠️ Development Stack
 
 It is developed with Python FastAPI framework and uses PostgreSQL database. The environment is containerised and can be easily deployed locally with Docker. With Python and FastAPI it's rather simple to extend the application with new vulnerable features in a short amount of time.
@@ -69,10 +88,10 @@ Damn Vulnerable RESTaurant is not actually limited to any specific type of API, 
 
 There are several ideas for improving the project such as:
 
-* adding learning resources to each vulnerability to help in better understanding vulns 
-* implementing more vulnerabilities
-* more user-friendly developer's environment with GitHub Codespaces
-* ideas based on feedback / issues raised in repository
+- [x] more user-friendly developer's environment with GitHub Codespaces
+- [ ] adding learning resources to each vulnerability to help in better understanding vulns
+- [ ] implementing more vulnerabilities
+- [ ] ideas based on feedback / issues raised in repository
 
 ## 🤝 Development / Contribution
 
