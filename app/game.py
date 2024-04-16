@@ -32,7 +32,7 @@ def run_tests(test_file_path=None):
         )
         animation = "|/-\\"
         idx = 0
-        print("  Running tests...", end="\r")
+        print("  Running tests... Please wait...", end="\r")
         while process.poll() is None:
             print(animation[idx % len(animation)], end="\r")
             idx += 1
