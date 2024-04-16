@@ -1,34 +1,68 @@
 import ast
 import subprocess
+import time
 from os import listdir
 from os.path import isfile, join
 
 from colorama import Fore, Style
 
 BASE_PATH = "app"
-TESTS_DIR = "tests/vulns/"
-TEST_FILES_PATHS = sorted(
-    [join(TESTS_DIR, f) for f in listdir(TESTS_DIR) if isfile(join(TESTS_DIR, f))]
+VULNS_TESTS_DIR = "tests/vulns/"
+VULNS_TEST_FILES_PATHS = sorted(
+    [
+        join(VULNS_TESTS_DIR, f)
+        for f in listdir(VULNS_TESTS_DIR)
+        if isfile(join(VULNS_TESTS_DIR, f))
+    ]
 )
 
 
-def is_vulnerability_fixed(test_file_path):
+def run_tests(test_file_path=None):
     try:
         command = [
             "pytest",
-            test_file_path,
             "--disable-warnings",
             "-qq",
         ]
-        result = subprocess.run(command, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        if test_file_path:
+            command.append(test_file_path)
 
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        animation = "|/-\\"
+        idx = 0
+        print("  Running tests...", end="\r")
+        while process.poll() is None:
+            print(animation[idx % len(animation)], end="\r")
+            idx += 1
+            time.sleep(0.1)
+
+        stdout, stderr = process.communicate()
+
+    except subprocess.CalledProcessError as e:
+        print(f"Subprocess error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    class TestsResult:
+        def __init__(self, returncode, stdout, stderr):
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    return TestsResult(process.returncode, stdout, stderr)
+
+
+def is_vulnerability_fixed(test_file_path):
+    result = run_tests(test_file_path)
     return (
         result.returncode == 1
     )  # Tests were collected and run but some of the tests failed
+
+
+def get_unit_tests_suite_result():
+    return run_tests()
 
 
 def get_vuln_name(test_file_path):
@@ -156,42 +190,70 @@ def move_cursor_top(lines=1):
 print_welcome_screen()
 press_key_to_continue("Click any key to continue...", end="\n\n")
 
-for i, level_test_file in enumerate(TEST_FILES_PATHS, start=1):
+for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
     vuln_name = get_vuln_name(level_test_file)
-    is_fixed = is_vulnerability_fixed(level_test_file)
+    is_vuln_fixed = is_vulnerability_fixed(level_test_file)
+    unit_tests_result = get_unit_tests_suite_result()
+    is_working_fine = unit_tests_result.returncode == 0
+    first_try = True
 
-    if is_fixed:
-        print_color_text(
-            f'Congratulations! You fixed the "{vuln_name}" vulnerability!',
-            color=Fore.GREEN,
-            end="\n",
-        )
-    else:
-        print_level_description(level_test_file)
-
-        if not is_fixed:
-            press_key_to_continue(
-                "Fix the vulnerability and press any key to validate the fix...",
-                end="\r\r",
-            )
-            move_cursor_top()
-
-        while not is_fixed:
-            is_fixed = is_vulnerability_fixed(level_test_file)
-            if not is_fixed:
-                press_key_to_continue(
-                    """Unfortunately, the vulnerability is not fixed yet.
-Fix the vulnerability and press any key to validate the fix...""",
-                    end="\r\r",
-                )
-                move_cursor_top(2)
-
+    if is_vuln_fixed and is_working_fine:
         print_color_text(
             f'Congratulations! You fixed the "{vuln_name}" vulnerability!',
             color=Fore.GREEN,
             end="\n\n",
         )
-        press_key_to_continue("Click any key to continue...", end="\n\n")
+    else:
+        print_level_description(level_test_file)
 
-    if i == len(TEST_FILES_PATHS):
+    while not is_vuln_fixed or not is_working_fine:
+        if is_vuln_fixed and not is_working_fine:
+            unit_tests_result_out = unit_tests_result.stdout.replace("\n", "\n\r")
+            print_color_text(
+                unit_tests_result_out,
+                color=Fore.RED,
+                end="\n\r\n\r",
+            )
+            logs_lines_count = unit_tests_result_out.count("\n\r")
+            print_color_text(
+                f"The vulnerability seems to be fixed! However, the feature is not working correctly! Check the above unit tests logs...",
+                color=Fore.RED,
+                end="\n\r",
+            )
+            press_key_to_continue(
+                "Fix the issue and press any key to validate...",
+                end="\r\r",
+            )
+            move_cursor_top(logs_lines_count + 4)
+        elif not is_vuln_fixed:
+            if first_try:
+                press_key_to_continue(
+                    "Fix the vulnerability and press any key to validate the fix...",
+                    end="\r\r",
+                )
+                move_cursor_top()
+            else:
+                press_key_to_continue(
+                    """Unfortunately, the vulnerability is not fixed yet.
+Fix the vulnerability and press any key to validate the fix...""",
+                    color=Fore.RED,
+                    end="\r\r",
+                )
+                move_cursor_top(2)
+
+        first_try = False
+        is_vuln_fixed = is_vulnerability_fixed(level_test_file)
+        unit_tests_result = get_unit_tests_suite_result()
+        is_working_fine = unit_tests_result.returncode == 0
+
+        if is_vuln_fixed and is_working_fine:
+            print_color_text(
+                f'Congratulations! You fixed the "{vuln_name}" vulnerability!',
+                color=Fore.GREEN,
+                end="\n\n",
+            )
+            press_key_to_continue("Click any key to continue...", end="\n\n")
+            first_try = True
+
+    if i == len(VULNS_TEST_FILES_PATHS):
         print_congrats_screen()
