@@ -14,7 +14,7 @@ The following is a list of users who have completed all current challenges in th
 
 | Avatar | Username | Achievement | Solution |
 | ------ | -------- | --------- | --------- |
-| ![username](github_user_url) | [username](github_repo_url) | (Fixed All Vulns or/and Root Access) | solution url |
+| ![turbra](https://github.com/turbra) | [turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game) | (Root Access) | [solution url](https://github.com/turbra/DV-RESTaurant-API-Game-Solution/blob/main/README.md) |
 ---
 
 ## Submitting Your Solution
@@ -36,3 +36,5 @@ Follow one or both of the following flows to submit your solution, depending on 
    * In case of a write-up created in the PR, ensure that the solution column contains a link to the PR when it's created.
    * Make sure that you performed all actions included in a checklist shown in the submission template.
 3. Wait for your PR to be reviewed.
+[https://github.com/turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game)
+https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game
