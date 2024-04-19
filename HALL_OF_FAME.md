@@ -14,7 +14,7 @@ The following is a list of users who have completed all current challenges in th
 
 | Avatar | Username | Achievement | Solution |
 | ------ | -------- | --------- | --------- |
-| ![alt text](https://avatars.githubusercontent.com/u/52045281?s=400&u=f77f6039401295b5bf0f47b103eda021ade270d4&v=4) | [turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game) | Root Access | [solution url](https://github.com/turbra/DV-RESTaurant-API-Game-Solution/blob/main/README.md) |
+| <img src="https://avatars.githubusercontent.com/u/52045281?s=400&u=f77f6039401295b5bf0f47b103eda021ade270d4&v=4" width="100px"> | [turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game) | Root Access | [solution url](https://github.com/turbra/DV-RESTaurant-API-Game-Solution/blob/main/README.md) |
 ---
 
 ## Submitting Your Solution
