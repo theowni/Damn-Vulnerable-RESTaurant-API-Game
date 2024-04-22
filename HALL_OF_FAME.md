@@ -36,5 +36,3 @@ Follow one or both of the following flows to submit your solution, depending on 
    * In case of a write-up created in the PR, ensure that the solution column contains a link to the PR when it's created.
    * Make sure that you performed all actions included in a checklist shown in the submission template.
 3. Wait for your PR to be reviewed.
-[https://github.com/turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game)
-https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game
