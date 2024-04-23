@@ -28,7 +28,7 @@ def create_menu_item(
     db_item = utils.create_menu_item(db, menu_item)
     return db_item
 
-
+# adding comment
 @router.put("/menu/{item_id}", response_model=schemas.MenuItem)
 def update_menu_item(
     item_id: int,
@@ -39,6 +39,7 @@ def update_menu_item(
 ):
     db_item = utils.update_menu_item(db, item_id, menu_item)
     return db_item
+# also here
 
 
 @router.delete("/menu/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
