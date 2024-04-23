@@ -36,6 +36,7 @@ def update_menu_item(
     db: Session = Depends(get_db),
     auth=Depends(RolesBasedAuthChecker([UserRole.EMPLOYEE, UserRole.CHEF])),
 ):
+# test
     db_item = utils.update_menu_item(db, item_id, menu_item)
     return db_item
 
