@@ -49,13 +49,21 @@ async def get_current_user_details(
 
 @router.put("/profile", response_model=UserRead, status_code=status.HTTP_200_OK)
 def update_current_user_details(
-    user: UserUpdate,
-    current_user: Annotated[User, Depends(get_current_user)],
+    user_update: UserUpdate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    db_user = update_user(db, user.username, user)
+    # Check if the user is updating their own profile
+    if user_update.username != current_user.username:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: You can only update your own profile"
+        )
 
-    return current_user
+    # Proceed with updating the user's profile
+    updated_user = update_user(db, current_user.username, user_update)
+
+    return updated_user
 
 
 @router.post(
