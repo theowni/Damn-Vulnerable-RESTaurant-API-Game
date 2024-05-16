@@ -54,7 +54,12 @@ def update_current_user_details(
     db: Session = Depends(get_db),
 ):
     db_user = update_user(db, user.username, user)
-
+    if current_user.username != db_user.username:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You do not have acces to this page",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return current_user
 
 

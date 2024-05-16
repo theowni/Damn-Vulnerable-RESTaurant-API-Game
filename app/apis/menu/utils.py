@@ -4,10 +4,21 @@ import requests
 from apis.menu import schemas
 from db.models import MenuItem
 from fastapi import HTTPException
+from urllib.parse import urlparse
 
 
 def _image_url_to_base64(image_url: str):
+    parsed_url = urlparse(image_url)
+    domain = parsed_url.netloc
+    if domain == 'localhost' or domain == '127.0.0.1':
+       raise HTTPException(status_code=500, detail="Error!")
+    valid_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp')
+    if not parsed_url.path.lower().endswith(valid_extensions):
+        raise HTTPException(status_code=500, detail="Error!")
     response = requests.get(image_url)
+    content_type = response.headers.get("content-type", "")
+    if not content_type.startswith("image"):
+        raise HTTPException(status_code=500, detail="Error!")
     return base64.b64encode(response.content).decode()
 
 
