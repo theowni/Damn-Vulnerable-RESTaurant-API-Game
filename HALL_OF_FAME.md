@@ -16,7 +16,7 @@ The following is a list of users who have completed all current challenges in th
 | ------ | -------- | --------- | --------- |
 | <img src="https://avatars.githubusercontent.com/u/52045281?s=400&u=f77f6039401295b5bf0f47b103eda021ade270d4&v=4" width="100px"> | [turbra](https://github.com/turbra/Damn-Vulnerable-RESTaurant-API-Game) | Root Access | [solution url](https://github.com/turbra/DV-RESTaurant-API-Game-Solution/blob/main/README.md) |
 | <img src="https://avatars.githubusercontent.com/u/104169244?v=4" width="100px">                                                 | [GangGreenTemperTatum](https://github.com/GangGreenTemperTatum/Damn-Vulnerable-RESTaurant-API-Game) | Root Access & Fixed All Vulns | [solution url](https://github.com/GangGreenTemperTatum/Damn-Vulnerable-RESTaurant-API-Game/blob/main/walkthrough/Damn-Vulnerable-RESTaurant-API-Game%20CTF%20Web%20Applic%20f4cc903ddcbf49cb93a7ebe710af7837.md) |
-
+| <img src="https://avatars.githubusercontent.com/u/12629081?v=4" width="100px">                                                 | [DarkAlek](https://github.com/DarkAlek/Damn-Vulnerable-RESTaurant-API-Game) | Root Access & Fixed All Vulns | [solution url](https://github.com/DarkAlek/Damn-Vulnerable-RESTaurant-API-Game/blob/6e172dc2e89e01cbe5169c6754dea9ef54106012/SOLUTION_WRITE_UP.md) |
 ---
 
 ## Submitting Your Solution
