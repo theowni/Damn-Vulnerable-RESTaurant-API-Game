@@ -2,7 +2,7 @@ from typing import List
 
 from apis.auth.utils import RolesBasedAuthChecker, get_current_user
 from apis.orders import schemas
-from db.models import MenuItem, Order, User, UserRole, order_items
+from db.models import MenuItem, Order, OrderItem, User, UserRole
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -27,6 +27,7 @@ def create_order(
     )
     db.add(db_order)
     db.commit()
+    db.refresh(db_order)
 
     # Add menu items to the order
     for item in order.items:
@@ -35,38 +36,25 @@ def create_order(
             db.rollback()
             raise HTTPException(
                 status_code=422,
-                detail=f"Quantity must be greater than 0",
+                detail="Quantity must be greater than 0",
             )
-        if db_item:
-            association = order_items.insert().values(
-                order_id=db_order.id,
-                menu_item_id=item.menu_item_id,
-                quantity=item.quantity,
-            )
-            db.execute(association)
-        else:
+        if not db_item:
             db.rollback()
             raise HTTPException(
                 status_code=404,
                 detail=f"Menu item with ID {item.menu_item_id} not found",
             )
-    db.commit()
 
-    order_items_created = (
-        db.query(order_items).filter(order_items.c.order_id == db_order.id).all()
-    )
-    order_created = schemas.Order(
-        id=db_order.id,
-        user_id=db_order.user_id,
-        items=[
-            schemas.OrderItem(menu_item_id=item.menu_item_id, quantity=item.quantity)
-            for item in order_items_created
-        ],
-        delivery_address=order.delivery_address,
-        phone_number=order.phone_number,
-        status=schemas.OrderStatus.PENDING,
-    )
-    return order_created
+        order_item = OrderItem(
+            order_id=db_order.id,
+            menu_item_id=item.menu_item_id,
+            quantity=item.quantity,
+        )
+        db.add(order_item)
+    db.commit()
+    db.refresh(db_order)
+
+    return db_order
 
 
 @router.get("/orders", response_model=List[schemas.Order])
@@ -79,7 +67,7 @@ def get_orders(
 ):
     orders = (
         db.query(Order)
-        .filter(Order.user == current_user)
+        .filter(Order.user_id == current_user.id)
         .offset(skip)
         .limit(limit)
         .all()

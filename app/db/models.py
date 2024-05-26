@@ -2,26 +2,8 @@ import datetime
 import enum
 
 from db.base import Base
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Enum,
-    Float,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    Text,
-)
+from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
-
-order_items = Table(
-    "order_items",
-    Base.metadata,
-    Column("order_id", ForeignKey("orders.id"), primary_key=True),
-    Column("menu_item_id", ForeignKey("menu_items.id"), primary_key=True),
-    Column("quantity", Integer),
-)
 
 
 class UserRole(str, enum.Enum):
@@ -62,16 +44,29 @@ class MenuItem(Base):
     category = Column(String)
     image_base64 = Column(Text)  # Base64-encoded images
 
+    order_items = relationship("OrderItem", back_populates="menu_item")
+
 
 class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    items = relationship("MenuItem", secondary=order_items)
     date_ordered = Column(DateTime, default=datetime.datetime.utcnow)
     status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
     delivery_address = Column(String)
     phone_number = Column(String)
 
     user = relationship("User", back_populates="orders")
+    items = relationship("OrderItem", back_populates="order")
+
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+
+    order_id = Column(Integer, ForeignKey("orders.id"), primary_key=True)
+    menu_item_id = Column(Integer, ForeignKey("menu_items.id"), primary_key=True)
+    quantity = Column(Integer)
+
+    order = relationship("Order", back_populates="items")
+    menu_item = relationship("MenuItem", back_populates="order_items")
