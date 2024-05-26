@@ -27,6 +27,7 @@ class UserRead(BaseModel):
     phone_number: Union[str, None] = None
     role: str
 
+
 class UserUpdate(BaseModel):
     username: str
     first_name: Union[str, None] = None

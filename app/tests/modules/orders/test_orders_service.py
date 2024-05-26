@@ -83,7 +83,7 @@ def test_get_orders_returns_one_item_with_200(customer_client, test_db):
         price=15.99,
         category="Pizza",
         description="A delicious pizza with a special blend of toppings",
-        image_base64="base64string"
+        image_base64="base64string",
     )
     test_db.add(menu_item)
     test_db.commit()
@@ -94,11 +94,7 @@ def test_get_orders_returns_one_item_with_200(customer_client, test_db):
     test_db.commit()
 
     # Create an order item and add it to the order
-    order_item = OrderItem(
-        order_id=order.id,
-        menu_item_id=menu_item.id,
-        quantity=2
-    )
+    order_item = OrderItem(order_id=order.id, menu_item_id=menu_item.id, quantity=2)
     test_db.add(order_item)
     test_db.commit()
 
@@ -113,12 +109,13 @@ def test_get_orders_returns_one_item_with_200(customer_client, test_db):
     assert orders_response[0].get("id") == order.id
     assert orders_response[0].get("delivery_address") == "123 Main St"
     assert orders_response[0].get("phone_number") == "555-1234"
-    assert len(orders_response[0].get("items")) == 1  # Checking there is exactly one item in the order
+    assert (
+        len(orders_response[0].get("items")) == 1
+    )  # Checking there is exactly one item in the order
     assert orders_response[0].get("items")[0]["menu_item_id"] == menu_item.id
     assert orders_response[0].get("items")[0]["quantity"] == 2
     assert orders_response[0].get("user_id") is not None
     assert orders_response[0].get("status") == "Pending"
-
 
 
 def test_get_orders_empty_returns_empty_list_with_200(customer_client):
@@ -144,7 +141,7 @@ def test_get_order_succesfully_returns_200(customer_client, test_db):
         price=9.99,
         category="Burgers",
         description="A large burger with all toppings",
-        image_base64="base64string"
+        image_base64="base64string",
     )
     test_db.add(menu_item)
     test_db.commit()
@@ -155,11 +152,7 @@ def test_get_order_succesfully_returns_200(customer_client, test_db):
     test_db.commit()
 
     # Create an order item and add it to the order
-    order_item = OrderItem(
-        order_id=order.id,
-        menu_item_id=menu_item.id,
-        quantity=1
-    )
+    order_item = OrderItem(order_id=order.id, menu_item_id=menu_item.id, quantity=1)
     test_db.add(order_item)
     test_db.commit()
 
@@ -175,7 +168,9 @@ def test_get_order_succesfully_returns_200(customer_client, test_db):
     assert order_response.get("phone_number") == "555-1234"
     assert order_response.get("user_id") == 1
     assert order_response.get("status") == "Pending"
-    assert len(order_response.get("items")) == 1  # Ensure there is one item in the order
+    assert (
+        len(order_response.get("items")) == 1
+    )  # Ensure there is one item in the order
     assert order_response.get("items")[0]["menu_item_id"] == menu_item.id
     assert order_response.get("items")[0]["quantity"] == 1
 
@@ -197,10 +192,23 @@ def test_get_order_not_exist_returns_404(customer_client):
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json().get("detail") == "Order not found"
 
+
 def test_create_order_with_multiple_items(customer_client, test_db):
     # Create multiple menu items
-    item1 = MenuItem(name="Cheese Pizza", price=12.00, category="Pizza", description="Cheesy goodness", image_base64="")
-    item2 = MenuItem(name="Veggie Pizza", price=15.00, category="Pizza", description="Loaded with veggies", image_base64="")
+    item1 = MenuItem(
+        name="Cheese Pizza",
+        price=12.00,
+        category="Pizza",
+        description="Cheesy goodness",
+        image_base64="",
+    )
+    item2 = MenuItem(
+        name="Veggie Pizza",
+        price=15.00,
+        category="Pizza",
+        description="Loaded with veggies",
+        image_base64="",
+    )
     test_db.add_all([item1, item2])
     test_db.commit()
 
@@ -209,8 +217,8 @@ def test_create_order_with_multiple_items(customer_client, test_db):
         "phone_number": "555-6789",
         "items": [
             {"menu_item_id": item1.id, "quantity": 1},
-            {"menu_item_id": item2.id, "quantity": 1}
-        ]
+            {"menu_item_id": item2.id, "quantity": 1},
+        ],
     }
 
     response = customer_client.post("/orders", json=order_data)
@@ -224,7 +232,9 @@ def test_create_order_with_multiple_items(customer_client, test_db):
 
 def test_list_multiple_orders(customer_client, test_db):
     # Create and add multiple orders with items
-    menu_item = MenuItem(name="Burger", price=8.99, description="A tasty burger", image_base64="")
+    menu_item = MenuItem(
+        name="Burger", price=8.99, description="A tasty burger", image_base64=""
+    )
     test_db.add(menu_item)
     test_db.commit()
 
@@ -249,7 +259,9 @@ def test_list_multiple_orders(customer_client, test_db):
 
 def test_get_individual_orders(customer_client, test_db):
     # Create and add multiple orders with items
-    menu_item = MenuItem(name="Sandwich", price=5.99, description="Delicious sandwich", image_base64="")
+    menu_item = MenuItem(
+        name="Sandwich", price=5.99, description="Delicious sandwich", image_base64=""
+    )
     test_db.add(menu_item)
     test_db.commit()
 

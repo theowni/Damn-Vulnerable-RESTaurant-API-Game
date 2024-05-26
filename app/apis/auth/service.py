@@ -1,7 +1,9 @@
 from datetime import timedelta
 
 from apis.auth.exceptions import UserAlreadyExistsException
-from apis.auth.schemas import Token, UserCreate, UserRead, UserUpdate, User as UserSchema
+from apis.auth.schemas import Token
+from apis.auth.schemas import User as UserSchema
+from apis.auth.schemas import UserCreate, UserRead, UserUpdate
 from apis.auth.utils import (
     authenticate_user,
     create_access_token,
