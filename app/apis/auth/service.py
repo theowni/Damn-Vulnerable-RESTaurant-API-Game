@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from apis.auth.exceptions import UserAlreadyExistsException
-from apis.auth.schemas import Token, UserCreate, UserRead, UserUpdate
+from apis.auth.schemas import Token, UserCreate, UserRead, UserUpdate, User as UserSchema
 from apis.auth.utils import (
     authenticate_user,
     create_access_token,
@@ -49,7 +49,7 @@ async def get_current_user_details(
 
 @router.put("/profile", response_model=UserRead, status_code=status.HTTP_200_OK)
 def update_current_user_details(
-    user: UserUpdate,
+    user: UserSchema,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
 ):
