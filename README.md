@@ -78,6 +78,10 @@ To launch the game in [GitHub Codespaces](https://github.com/features/codespaces
 
 ![Damn Vulnerable RESTaurant Logo](images/codespace-screenshot-2.png)
 
+## 📖 Learning Resources
+
+Based on the Damn Vulnerable RESTaurant, I created a [Web API Security Champion](https://devsec-blog.com/tag/web-api-security-champion/) series about OWASP Top 10 API Security Risks presenting each vulnerability in a practical manner with exploitation steps, remedial and prevention actions. Enjoy!
+
 ## 🛠️ Development Stack
 
 It is developed with Python FastAPI framework and uses PostgreSQL database. The environment is containerised and can be easily deployed locally with Docker. With Python and FastAPI it's rather simple to extend the application with new vulnerable features in a short amount of time.
@@ -89,7 +93,7 @@ Damn Vulnerable RESTaurant is not actually limited to any specific type of API, 
 There are several ideas for improving the project such as:
 
 - [x] more user-friendly developer's environment with GitHub Codespaces
-- [ ] adding learning resources to each vulnerability to help in better understanding vulns
+- [x] adding learning resources to each vulnerability to help in better understanding vulns
 - [ ] implementing more vulnerabilities
 - [ ] ideas based on feedback / issues raised in repository
 
