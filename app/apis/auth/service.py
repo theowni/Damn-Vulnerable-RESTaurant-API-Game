@@ -1,21 +1,23 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from apis.auth.exceptions import UserAlreadyExistsException
 from apis.auth.schemas import Token
 from apis.auth.schemas import User as UserSchema
-from apis.auth.schemas import UserCreate, UserRead, UserUpdate
+from apis.auth.schemas import UserCreate, UserRead, UserUpdate, ResetPasswordData, NewPasswordData
 from apis.auth.utils import (
     authenticate_user,
     create_access_token,
     create_user,
     get_current_user,
     update_user,
+    update_user_password,
 )
 from db.models import User
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+import secrets
 from typing_extensions import Annotated
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -51,7 +53,7 @@ async def get_current_user_details(
 
 @router.put("/profile", response_model=UserRead, status_code=status.HTTP_200_OK)
 def update_current_user_details(
-    user: UserSchema,
+    user: UserUpdate,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -100,3 +102,83 @@ async def register_user(
         )
 
     return db_user
+
+
+@router.post(
+    "/reset-password",
+    status_code=status.HTTP_200_OK,
+)
+def reset_password(
+    data: ResetPasswordData,
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.username == data.username).first()
+
+    print(user)
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid username or phone number",
+        )
+
+    if user.phone_number.replace(" ", "") != data.phone_number.replace(" ", ""):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid username or phone number",
+        )
+
+    # 4 digits PIN code and 15 minutes expiration shouldn't be bypassed
+    # right?
+    user.reset_password_code = ''.join([str(secrets.randbelow(10)) for _ in range(4)])
+    user.reset_password_code_expiry_date = datetime.now() + timedelta(minutes=15)
+    db.add(user)
+    db.commit()
+
+    print(f"PIN {user.reset_password_code} set for {user.username}")
+
+    return {"detail": "PIN code sent to your phone number"}
+
+
+@router.post(
+    "/reset-password/new-password",
+    status_code=status.HTTP_200_OK,
+)
+def set_new_password(
+    data: NewPasswordData,
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.username == data.username).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid username or phone number",
+        )
+
+    if user.phone_number.replace(" ", "") != data.phone_number.replace(" ", ""):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid username or phone number",
+        )
+
+    if not user.reset_password_code:
+        raise HTTPException(
+            status_code=400,
+            detail="Reset password process was not initiated via /reset-password!",
+        )
+
+    if datetime.now() > user.reset_password_code_expiry_date:
+        raise HTTPException(
+            status_code=400,
+            detail="Reset password code expired!",
+        )
+
+    if user.reset_password_code != data.reset_password_code:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid reset password code",
+        )
+
+    update_user_password(db, user.username, data.new_password)
+
+    return {}
