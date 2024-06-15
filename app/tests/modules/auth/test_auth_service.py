@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+
+from apis.auth.utils import verify_password
 from db.models import User, UserRole
 
 
@@ -127,3 +130,114 @@ def test_register_by_authenticated_user_returns_400(test_db, customer_client, mo
         "/register", json=data, headers={"Authorization": "token"}
     )
     assert response.status_code == 400
+
+
+def test_reset_password_sets_reset_code_and_returns_200(test_db, anon_client):
+    user = User(
+        username="customer",
+        password="password",
+        first_name="Customer",
+        last_name="",
+        phone_number="12345678",
+        role=UserRole.CUSTOMER,
+    )
+    test_db.add(user)
+    test_db.commit()
+
+    data = {
+        "username": "customer",
+        "phone_number": "12345678",
+    }
+    response = anon_client.post("/reset-password", json=data)
+
+    user = test_db.query(User).filter(User.username == "customer").first()
+    assert user.reset_password_code is not None
+    assert user.reset_password_code_expiry_date is not None
+    assert response.status_code == 200
+    assert response.json().get("detail") == "PIN code sent to your phone number"
+
+
+def test_reset_password_with_invalid_data_returns_400(test_db, anon_client):
+    data = {
+        "username": "invalid_user",
+        "phone_number": "12345678",
+    }
+    response = anon_client.post("/reset-password", json=data)
+
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid username or phone number"
+
+
+def test_reset_password_for_non_customer_returns_400(test_db, anon_client):
+    user = User(
+        username="employee",
+        password="password",
+        first_name="Employee",
+        last_name="",
+        phone_number="12345678",
+        role=UserRole.EMPLOYEE,
+    )
+    test_db.add(user)
+    test_db.commit()
+
+    data = {
+        "username": "employee",
+        "phone_number": "12345678",
+    }
+    response = anon_client.post("/reset-password", json=data)
+
+    assert response.status_code == 400
+    assert (
+        response.json().get("detail")
+        == "Only customers can reset their password through this feature"
+    )
+
+
+def test_reset_password_with_incorrect_phone_number_returns_400(test_db, anon_client):
+    user = User(
+        username="customer",
+        password="password",
+        first_name="Customer",
+        last_name="",
+        phone_number="12345678",
+        role=UserRole.CUSTOMER,
+    )
+    test_db.add(user)
+    test_db.commit()
+
+    data = {
+        "username": "customer",
+        "phone_number": "12345679",
+    }
+    response = anon_client.post("/reset-password", json=data)
+
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid username or phone number"
+
+
+def test_set_new_password_returns_200(test_db, anon_client):
+    user = User(
+        username="customer",
+        password="password",
+        first_name="Customer",
+        last_name="",
+        phone_number="12345678",
+        role=UserRole.CUSTOMER,
+        reset_password_code="1234",
+        reset_password_code_expiry_date=datetime.now() + timedelta(minutes=15),
+    )
+    test_db.add(user)
+    test_db.commit()
+
+    data = {
+        "username": "customer",
+        "phone_number": "12345678",
+        "reset_password_code": "1234",
+        "new_password": "new_password",
+    }
+    response = anon_client.post("/reset-password/new-password", json=data)
+
+    user = test_db.query(User).filter(User.username == "customer").first()
+    assert verify_password("new_password", user.password)
+    assert response.status_code == 200
+    assert response.json().get("detail") == "Password updated successfully!"

@@ -166,3 +166,10 @@ class RolesBasedAuthChecker:
     def __call__(self, user: User = Depends(get_current_user)):
         if user.role not in self.required_roles:
             raise HTTPException(status_code=403, detail="Unauthorized")
+
+
+def send_code_to_phone_number(phone_number: str, code: str):
+    # normally this would send a code to the phone number using
+    # a third party service
+    print(f"Sending code {code} to phone number {phone_number}")
+    return True

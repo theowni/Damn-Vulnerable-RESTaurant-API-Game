@@ -10,10 +10,11 @@ from apis.auth.utils import (
     create_access_token,
     create_user,
     get_current_user,
+    send_code_to_phone_number,
     update_user,
     update_user_password,
 )
-from db.models import User
+from db.models import User, UserRole
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -113,12 +114,15 @@ def reset_password(
     db: Session = Depends(get_db),
 ):
     user = db.query(User).filter(User.username == data.username).first()
-
-    print(user)
     if not user:
         raise HTTPException(
             status_code=400,
             detail="Invalid username or phone number",
+        )
+    if user.role != UserRole.CUSTOMER:
+        raise HTTPException(
+            status_code=400,
+            detail="Only customers can reset their password through this feature",
         )
 
     if user.phone_number.replace(" ", "") != data.phone_number.replace(" ", ""):
@@ -134,8 +138,7 @@ def reset_password(
     db.add(user)
     db.commit()
 
-    print(f"PIN {user.reset_password_code} set for {user.username}")
-
+    send_code_to_phone_number(user.phone_number, user.reset_password_code)
     return {"detail": "PIN code sent to your phone number"}
 
 
@@ -148,7 +151,6 @@ def set_new_password(
     db: Session = Depends(get_db),
 ):
     user = db.query(User).filter(User.username == data.username).first()
-
     if not user:
         raise HTTPException(
             status_code=400,
@@ -180,5 +182,9 @@ def set_new_password(
         )
 
     update_user_password(db, user.username, data.new_password)
+    user.reset_password_code = None
+    user.reset_password_code_expiry_date = None
+    db.add(user)
+    db.commit()
 
-    return {}
+    return {"detail": "Password updated successfully!"}
