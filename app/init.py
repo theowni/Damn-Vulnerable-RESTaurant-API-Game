@@ -33,7 +33,7 @@ def load_users(db: Session):
         password="kaylee123",
         first_name="Mike",
         last_name="",
-        phone_number="",
+        phone_number="(505) 146-0190",
         role=UserRole.EMPLOYEE,
     )
     create_user_if_not_exists(

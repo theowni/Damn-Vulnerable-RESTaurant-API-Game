@@ -30,6 +30,8 @@ class User(Base):
     first_name = Column(String)
     last_name = Column(String)
     phone_number = Column(String, unique=True, index=True)
+    reset_password_code = Column(String, nullable=True)
+    reset_password_code_expiry_date = Column(DateTime, nullable=True)
 
     orders = relationship("Order", back_populates="user")
 
