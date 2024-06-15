@@ -1,9 +1,10 @@
+import secrets
 from datetime import datetime, timedelta
 
 from apis.auth.exceptions import UserAlreadyExistsException
-from apis.auth.schemas import Token
+from apis.auth.schemas import NewPasswordData, ResetPasswordData, Token
 from apis.auth.schemas import User as UserSchema
-from apis.auth.schemas import UserCreate, UserRead, UserUpdate, ResetPasswordData, NewPasswordData
+from apis.auth.schemas import UserCreate, UserRead, UserUpdate
 from apis.auth.utils import (
     authenticate_user,
     create_access_token,
@@ -17,7 +18,6 @@ from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-import secrets
 from typing_extensions import Annotated
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -129,7 +129,7 @@ def reset_password(
 
     # 4 digits PIN code and 15 minutes expiration shouldn't be bypassed
     # right?
-    user.reset_password_code = ''.join([str(secrets.randbelow(10)) for _ in range(4)])
+    user.reset_password_code = "".join([str(secrets.randbelow(10)) for _ in range(4)])
     user.reset_password_code_expiry_date = datetime.now() + timedelta(minutes=15)
     db.add(user)
     db.commit()
