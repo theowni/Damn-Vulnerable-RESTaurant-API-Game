@@ -9,9 +9,7 @@ def start_application():
         title="Damn Vulnerable RESTaurant",
         description="An intentionally vulnerable API service designed for learning and training purposes for ethical hackers, security engineers, and developers.",
         version="1.0.0",
-        servers=[
-            {"url": "http://localhost:8080", "description": "Local API server"}
-        ]
+        servers=[{"url": "http://localhost:8080", "description": "Local API server"}],
     )
     app.add_middleware(
         CORSMiddleware,
