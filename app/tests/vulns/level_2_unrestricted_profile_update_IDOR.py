@@ -17,8 +17,8 @@ def test_unrestricted_profile_update_idor(test_db, customer_client):
         Probably, it could be fixed by making sure that "current_user"
         is authorised to perform updates only in own profile.
 
-        The fix could be implemented in "update_current_user_details"
-        function in "apis/auth/service.py" file.
+        The fix could be implemented in "update_profile"
+        function in "app/apis/auth/services/update_profile_service.py" file.
     """
 
     # here, is the test confirming the vulnerability:

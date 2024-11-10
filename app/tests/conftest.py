@@ -12,6 +12,9 @@ from sqlalchemy.pool import StaticPool
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include app dir in sys.path so that we can import from db,main.py
 
+# disable tests caching
+sys.dont_write_bytecode = True
+
 from apis.auth.utils import get_current_user, get_password_hash
 from apis.router import api_router
 from db.base import Base
@@ -61,7 +64,7 @@ def anon_client(app, test_db: TestingSessionLocal) -> Generator[TestClient, Any,
     Create a new FastAPI TestClient that uses the `db_session` fixture to override
     the `get_db` dependency that is injected into routes.
     """
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_db] = lambda: test_db
 
     with TestClient(app) as client:
         yield client
@@ -76,6 +79,7 @@ def customer_client(
     the `get_db` dependency that is injected into routes.
     """
     user = User(
+        id=3,
         username="customer",
         password=get_password_hash("password"),
         first_name="Customer",
@@ -86,7 +90,7 @@ def customer_client(
     test_db.add(user)
     test_db.commit()
 
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_db] = lambda: test_db
     app.dependency_overrides[get_current_user] = lambda: user
 
     with TestClient(app) as client:
@@ -102,6 +106,7 @@ def employee_client(
     the `get_db` dependency that is injected into routes.
     """
     user = User(
+        id=2,
         username="employee",
         password=get_password_hash("password"),
         first_name="Employee",
@@ -112,7 +117,7 @@ def employee_client(
     test_db.add(user)
     test_db.commit()
 
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_db] = lambda: test_db
     app.dependency_overrides[get_current_user] = lambda: user
 
     with TestClient(app) as client:
@@ -126,6 +131,7 @@ def chef_client(app, test_db: TestingSessionLocal) -> Generator[TestClient, Any,
     the `get_db` dependency that is injected into routes.
     """
     user = User(
+        id=1,
         username="chef",
         password=get_password_hash("password"),
         first_name="Chef",
@@ -136,7 +142,7 @@ def chef_client(app, test_db: TestingSessionLocal) -> Generator[TestClient, Any,
     test_db.add(user)
     test_db.commit()
 
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_db] = lambda: test_db
     app.dependency_overrides[get_current_user] = lambda: user
 
     with TestClient(app) as client:
