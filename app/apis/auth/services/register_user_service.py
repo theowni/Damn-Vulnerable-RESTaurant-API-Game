@@ -1,25 +1,9 @@
-import secrets
-from datetime import datetime, timedelta
-
 from apis.auth.exceptions import UserAlreadyExistsException
-from apis.auth.schemas import NewPasswordData, ResetPasswordData, Token
-from apis.auth.schemas import User as UserSchema
-from apis.auth.schemas import UserCreate, UserRead, UserUpdate
-from apis.auth.utils import (
-    authenticate_user,
-    create_access_token,
-    create_user,
-    get_current_user,
-    send_code_to_phone_number,
-    update_user,
-    update_user_password,
-)
-from db.models import User, UserRole
+from apis.auth.schemas import UserCreate, UserRead
+from apis.auth.utils import create_user
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from typing_extensions import Annotated
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 7 * 24 * 60  # 1 week
 

@@ -1,8 +1,6 @@
-from typing import List
-
 from apis.auth.utils import RolesBasedAuthChecker, get_current_user
 from apis.menu import schemas, utils
-from db.models import MenuItem, User, UserRole
+from db.models import User, UserRole
 from db.session import get_db
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session

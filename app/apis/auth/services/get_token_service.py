@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from apis.auth.schemas import Token
 from apis.auth.utils import authenticate_user, create_access_token
-from db.models import User, UserRole
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm

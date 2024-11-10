@@ -1,12 +1,10 @@
 from typing import List
 
-from apis.auth.utils import RolesBasedAuthChecker, get_current_user
-from apis.menu import schemas, utils
-from db.models import MenuItem, User, UserRole
+from apis.menu import schemas
+from db.models import MenuItem
 from db.session import get_db
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing_extensions import Annotated
 
 router = APIRouter()
 

@@ -1,5 +1,3 @@
-from typing import List
-
 from apis.auth.utils import RolesBasedAuthChecker, get_current_user
 from apis.menu import utils
 from db.models import User, UserRole

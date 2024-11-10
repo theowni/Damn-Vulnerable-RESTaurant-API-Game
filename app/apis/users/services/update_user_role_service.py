@@ -1,4 +1,4 @@
-from apis.auth.utils import get_current_user, update_user
+from apis.auth.utils import RolesBasedAuthChecker, get_current_user, update_user
 from apis.users.schemas import UserRoleUpdate
 from db import models
 from db.session import get_db
