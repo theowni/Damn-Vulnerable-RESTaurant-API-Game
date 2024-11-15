@@ -15,9 +15,9 @@ def test_unrestricted_menu_item_deletion(test_db, customer_client):
 
     Possible fix:
         Probably, it could be fixed in "delete_menu_item" function in
-        "apis/menu/service.py" file by adding auth=Depends(...) with proper
+        "app/apis/menu/services/delete_menu_item_service.py" file by adding auth=Depends(...) with proper
         roles checks.
-        There is an example implementation of authorisation checks in
+        There is an example implementation of authorisation checks in update_menu_item_service.py file.
         "update_menu_item" function.
     """
 

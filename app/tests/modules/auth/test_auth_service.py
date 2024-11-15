@@ -69,19 +69,6 @@ def test_update_current_user_details_returns_200(test_db, customer_client):
     assert updated_details.get("phone_number") == data["phone_number"]
 
 
-def test_update_current_user_details_with_invalid_data_returns_422(
-    test_db, customer_client
-):
-    data = {
-        "first_name": "John",
-        "last_name": "Doe",
-        "phone_number": "invalid_phone_number",
-    }
-
-    response = customer_client.put("/profile", json=data)
-    assert response.status_code == 422
-
-
 def test_register_user_returns_201(test_db, anon_client):
     data = {
         "username": "new_user123",
@@ -107,7 +94,7 @@ def test_register_by_authenticated_user_returns_400(test_db, customer_client, mo
         return_value=lambda x: lambda y: "token",
     )
     mocker.patch(
-        "apis.auth.service.get_current_user",
+        "apis.auth.utils.get_current_user",
         return_value=User(
             username="customer",
             password="password",

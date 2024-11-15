@@ -12,6 +12,8 @@ It's a training playground:
 ## 🏆 Hall of Fame
 Participants who were able to complete this challenge are listed in [Hall of Fame](HALL_OF_FAME.md). Submit your solution and become one of them!
 
+*Solutions and walkthroughs published before 14.11.2024 may refer to the version available in the [linked commit](https://github.com/theowni/Damn-Vulnerable-RESTaurant-API-Game/tree/8ab2e0a75e76215ccc3a31974a5d7cf8726a7c3e).*
+
 ## 🚀 Starting the Game
 
 The application can be launched locally in two alternative ways: **Developers** can play an interactive game where they will investigate and fix vulnerabilities, or **Ethical Hackers** can identify and exploit vulnerabilities. Furthermore, [GitHub Codespaces](https://github.com/features/codespaces) can be used to run the application easily without a local environment! GitHub Codespaces offers up to 60 hours a month for free.

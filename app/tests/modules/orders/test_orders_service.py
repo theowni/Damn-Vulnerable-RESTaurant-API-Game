@@ -89,7 +89,7 @@ def test_get_orders_returns_one_item_with_200(customer_client, test_db):
     test_db.commit()
 
     # Create an order and add to the database
-    order = Order(delivery_address="123 Main St", phone_number="555-1234", user_id=1)
+    order = Order(delivery_address="123 Main St", phone_number="555-1234", user_id=3)
     test_db.add(order)
     test_db.commit()
 
@@ -134,7 +134,7 @@ def test_get_orders_unauthorised_returns_401(anon_client):
     assert response.json().get("detail") == "Not authenticated"
 
 
-def test_get_order_succesfully_returns_200(customer_client, test_db):
+def test_get_order_should_return_200_on_success(customer_client, test_db):
     # Create a menu item to associate with the order
     menu_item = MenuItem(
         name="Deluxe Burger",
@@ -175,7 +175,7 @@ def test_get_order_succesfully_returns_200(customer_client, test_db):
     assert order_response.get("items")[0]["quantity"] == 1
 
 
-def test_get_order_unauthorised_returns_401(anon_client, test_db):
+def test_get_order_should_return_401_for_unauthenticated(anon_client, test_db):
     order = Order(delivery_address="123 Main St", phone_number="555-1234", user_id=1)
     test_db.add(order)
     test_db.commit()
@@ -238,8 +238,8 @@ def test_list_multiple_orders(customer_client, test_db):
     test_db.add(menu_item)
     test_db.commit()
 
-    order1 = Order(delivery_address="456 Main St", phone_number="555-2345", user_id=1)
-    order2 = Order(delivery_address="789 Side St", phone_number="555-5678", user_id=1)
+    order1 = Order(delivery_address="456 Main St", phone_number="555-2345", user_id=3)
+    order2 = Order(delivery_address="789 Side St", phone_number="555-5678", user_id=3)
     test_db.add_all([order1, order2])
     test_db.commit()
 
@@ -265,8 +265,8 @@ def test_get_individual_orders(customer_client, test_db):
     test_db.add(menu_item)
     test_db.commit()
 
-    order1 = Order(delivery_address="321 New Ave", phone_number="555-4321", user_id=1)
-    order2 = Order(delivery_address="654 Old Ave", phone_number="555-8765", user_id=1)
+    order1 = Order(delivery_address="321 New Ave", phone_number="555-4321", user_id=3)
+    order2 = Order(delivery_address="654 Old Ave", phone_number="555-8765", user_id=3)
     test_db.add_all([order1, order2])
     test_db.commit()
 
@@ -281,7 +281,7 @@ def test_get_individual_orders(customer_client, test_db):
         assert response.status_code == status.HTTP_200_OK
         response_json = response.json()
         assert response_json["id"] == order.id
-        assert response_json["user_id"] == 1
+        assert response_json["user_id"] == 3
         assert len(response_json["items"]) == 1
         assert response_json["items"][0]["menu_item_id"] == menu_item.id
         assert response_json["items"][0]["quantity"] == 1

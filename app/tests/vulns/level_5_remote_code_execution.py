@@ -29,7 +29,7 @@ def test_rce(test_db, chef_client):
         Furthermore, parameters should be passed as a list of arguments to
         the "df" command, not concatenated as shell command.
 
-        It could be implemented in "get_disk_usage" function in "apis/admin/utils.py".
+        It could be implemented in "get_disk_usage" function in "app/apis/admin/utils.py".
     """
 
     # here, is the test confirming the vulnerability:

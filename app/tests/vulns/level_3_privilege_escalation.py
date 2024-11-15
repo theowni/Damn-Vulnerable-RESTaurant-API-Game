@@ -22,7 +22,7 @@ def test_privilege_escalation(test_db, customer_client):
         It could be fixed by making sure that only employees
         or Chef can grant Employee role.
 
-        Probably, the fix could be implemented in "apis/users/service.py" file
+        Probably, the fix could be implemented in "app/apis/users/services/update_user_role_service.py" file
         in "update_user_role" function - in a similar way as first vuln.
     """
 

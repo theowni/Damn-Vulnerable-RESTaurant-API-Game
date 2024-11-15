@@ -20,7 +20,7 @@ def test_technology_details_exposed_via_http_header(anon_client):
     Possible fix:
         Modify "/healthcheck" endpoint to not return "X-Powered-By" HTTP header.
         It can be achieved by removing the "response.headers" line
-        from "apis/healthcheck/service.py" file.
+        from "app/apis/healthcheck/service.py" file.
     """
 
     response = anon_client.get("/healthcheck")

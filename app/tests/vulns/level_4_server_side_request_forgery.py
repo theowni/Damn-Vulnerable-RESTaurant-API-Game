@@ -36,8 +36,8 @@ def test_ssrf(test_db, employee_client, anon_client, requests_mock, mocker):
         to be used to host images for menu. Also, would be cool to
         restrict filetypes to images only.
 
-        I think it could be fixed in "apis/menu/utils.py" in "_image_url_to_base64"
-        function, or in "menu/service.py" in "update_menu_item" function.
+        I think it could be fixed in "app/apis/menu/utils.py" in "_image_url_to_base64"
+        function, or in "app/apis/menu/servics/update_menu_item_service.py" in "update_menu_item" function.
     """
 
     # here, is the test confirming the vulnerability:
