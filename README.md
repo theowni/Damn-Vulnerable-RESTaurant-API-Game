@@ -55,9 +55,9 @@ You just need to find a Chef and follow the steps:
     ./start_app.sh
     ```
 
-3. The API service will be exposed at [http://localhost:8080](http://localhost:8080) by default. API documentation can be found at the following endpoints:
- * Swagger - [http://localhost:8080/docs](http://localhost:8080/docs)
- * Redoc - [http://localhost:8080/redoc](http://localhost:8080/redoc)
+3. The API service will be exposed at [http://localhost:8091](http://localhost:8091) by default. API documentation can be found at the following endpoints:
+ * Swagger - [http://localhost:8091/docs](http://localhost:8091/docs)
+ * Redoc - [http://localhost:8091/redoc](http://localhost:8091/redoc)
 
 4. To close the restaurant at the end of the hacking day, just run:
 ```
