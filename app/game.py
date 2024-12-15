@@ -190,6 +190,27 @@ def move_cursor_top(lines=1):
 print_welcome_screen()
 press_key_to_continue("Click any key to continue...", end="\n\n")
 
+unit_tests_result = get_unit_tests_suite_result()
+while unit_tests_result.stderr:
+    unit_tests_result_out = unit_tests_result.stderr.replace("\n", "\n\r")
+    print_color_text(
+        unit_tests_result_out,
+        color=Fore.RED,
+        end="\n\r\n\r",
+    )
+    logs_lines_count = unit_tests_result_out.count("\n\r")
+    print_color_text(
+        f"It seems, the application is not working correctly. It might be related with wrong formatting, imports or code syntax issues. Check the above logs for more details...",
+        color=Fore.RED,
+        end="\n\r",
+    )
+    press_key_to_continue(
+        "Fix the issue and press any key to continue... You can use `git restore <affected_file>` to restore the file contents.",
+        end="\r\r",
+    )
+    move_cursor_top(logs_lines_count + 4)
+    unit_tests_result = get_unit_tests_suite_result()
+
 for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
     vuln_name = get_vuln_name(level_test_file)
     is_vuln_fixed = is_vulnerability_fixed(level_test_file)
@@ -208,7 +229,13 @@ for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
 
     while not is_vuln_fixed or not is_working_fine:
         if is_vuln_fixed and not is_working_fine:
-            unit_tests_result_out = unit_tests_result.stdout.replace("\n", "\n\r")
+            unit_tests_result_out = (
+                unit_tests_result.stdout.replace("\n", "\n\r") + "\n\r"
+                if unit_tests_result.stdout
+                else ""
+            )
+
+            unit_tests_result_out += unit_tests_result.stderr.replace("\n", "\n\r")
             print_color_text(
                 unit_tests_result_out,
                 color=Fore.RED,
@@ -216,7 +243,31 @@ for i, level_test_file in enumerate(VULNS_TEST_FILES_PATHS, start=1):
             )
             logs_lines_count = unit_tests_result_out.count("\n\r")
             print_color_text(
-                f"The vulnerability seems to be fixed! However, the feature is not working correctly! Check the above unit tests logs...",
+                f"The vulnerability seems to be fixed! However, the feature or the application is not working correctly! It might be related with wrong formatting, imports or code syntax issues. Check the above logs for more details...",
+                color=Fore.RED,
+                end="\n\r",
+            )
+            press_key_to_continue(
+                "Fix the issue and press any key to validate...",
+                end="\r\r",
+            )
+            move_cursor_top(logs_lines_count + 4)
+        if not is_working_fine and not is_vuln_fixed:
+            unit_tests_result_out = (
+                unit_tests_result.stdout.replace("\n", "\n\r") + "\n\r"
+                if unit_tests_result.stdout
+                else ""
+            )
+
+            unit_tests_result_out += unit_tests_result.stderr.replace("\n", "\n\r")
+            print_color_text(
+                unit_tests_result_out,
+                color=Fore.RED,
+                end="\n\r\n\r",
+            )
+            logs_lines_count = unit_tests_result_out.count("\n\r")
+            print_color_text(
+                f"The feature or the application is not working correctly! It might be related with wrong formatting, imports or code syntax issues. Check the above logs for more details...",
                 color=Fore.RED,
                 end="\n\r",
             )
