@@ -23,6 +23,7 @@ pytest = "^7.4.0"
 pytest-mock = "^3.14.0"
 requests-mock = "^1.11.0"
 colorama = "^0.4.6"
+pytest-json-report = "^1.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
