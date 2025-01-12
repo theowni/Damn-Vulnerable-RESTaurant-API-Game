@@ -69,6 +69,22 @@ def test_update_current_user_details_returns_200(test_db, customer_client):
     assert updated_details.get("phone_number") == data["phone_number"]
 
 
+def test_patch_profile_returns_200(test_db, customer_client):
+    data = {
+        "first_name": "John",
+        "last_name": "Doe",
+        "phone_number": "1234567890",
+    }
+
+    response = customer_client.patch("/profile", json=data)
+
+    assert response.status_code == 200
+    updated_details = response.json()
+    assert updated_details.get("first_name") == data["first_name"]
+    assert updated_details.get("last_name") == data["last_name"]
+    assert updated_details.get("phone_number") == data["phone_number"]
+
+
 def test_register_user_returns_201(test_db, anon_client):
     data = {
         "username": "new_user123",
