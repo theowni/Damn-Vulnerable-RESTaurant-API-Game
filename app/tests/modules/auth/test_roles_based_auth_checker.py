@@ -1,15 +1,17 @@
-from fastapi import Depends, HTTPException
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from db.models import User, UserRole
+import pytest
 from apis.auth.utils import RolesBasedAuthChecker
+from db.models import User, UserRole
+from fastapi import Depends, HTTPException
 
 
 def test_RolesBasedAuthChecker_should_raise_403_http_exception_if_user_does_not_have_required_role():
     mock_user = User(role=UserRole.CUSTOMER)
-    auth_checker = RolesBasedAuthChecker(required_roles=[UserRole.CHEF, UserRole.EMPLOYEE])
-    
+    auth_checker = RolesBasedAuthChecker(
+        required_roles=[UserRole.CHEF, UserRole.EMPLOYEE]
+    )
+
     http_exception = False
     try:
         auth_checker(user=mock_user)
@@ -21,6 +23,8 @@ def test_RolesBasedAuthChecker_should_raise_403_http_exception_if_user_does_not_
 
 def test_RolesBasedAuthChecker_should_return_true_if_user_has_required_role():
     mock_user = User(role=UserRole.CHEF)
-    auth_checker = RolesBasedAuthChecker(required_roles=[UserRole.CHEF, UserRole.EMPLOYEE])
+    auth_checker = RolesBasedAuthChecker(
+        required_roles=[UserRole.CHEF, UserRole.EMPLOYEE]
+    )
     result = auth_checker(user=mock_user)
     assert result is True

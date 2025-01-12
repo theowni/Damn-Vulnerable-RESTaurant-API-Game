@@ -6,7 +6,6 @@ from db.session import get_db
 from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, Extra
 from sqlalchemy.orm import Session
-from typing import Union
 from typing_extensions import Annotated
 
 router = APIRouter()
