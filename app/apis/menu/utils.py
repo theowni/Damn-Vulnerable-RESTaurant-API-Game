@@ -36,7 +36,7 @@ def update_menu_item(
 ):
     db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
     if db_item is None:
-        raise HTTPException(status_code=404, detail="Menu Item not found")
+        raise HTTPException(status_code=404, detail="Menu item not found")
 
     menu_item_dict = menu_item.dict()
     image_url = menu_item_dict.pop("image_url", None)
@@ -56,7 +56,7 @@ def update_menu_item(
 def delete_menu_item(db, item_id: int):
     db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
     if db_item is None:
-        raise HTTPException(status_code=404, detail="MenuItem not found")
+        raise HTTPException(status_code=404, detail="Menu item not found")
 
     db.delete(db_item)
     db.commit()
