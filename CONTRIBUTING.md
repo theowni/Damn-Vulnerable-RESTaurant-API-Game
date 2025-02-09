@@ -9,14 +9,14 @@ This documentation is dedicated for contributors who would like to add new vulne
 
 ## Configuring the project
 The project is developed with the following frameworks and technologies:
-* [Python 3.8](https://www.python.org/downloads/release/python-380/)
+* [Python 3.10](https://www.python.org/downloads/release/python-380/)
 * [Docker](https://www.docker.com/) as a platform for containerisation 
 * [FastAPI](https://github.com/tiangolo/fastapi) as easy to learn and fast to code web framework
 * [PostgreSQL 15.4](https://www.postgresql.org/) as a database
 * [Pytest](https://docs.pytest.org/) for code testing
 * [pre-commit](https://pre-commit.com/) for maintaining hooks for code style and tests
 
-Configuring a development environment is a straightforward process assuming that `Python>=3.8`, `pip` and `Docker` are already installed:
+Configuring a development environment is a straightforward process assuming that `Python>=3.10`, `pip` and `Docker` are already installed:
 
 1. Install `psycopg2` prerequisites as described in the [official documentation](https://www.psycopg.org/install/). For "*nix" distributions, the following command can be used:
     ```sh

@@ -1,4 +1,4 @@
-FROM python:3.8-buster as builder
+FROM python:3.10-buster as builder
 
 RUN pip install poetry==1.4.2
 
@@ -15,7 +15,7 @@ RUN touch README.md
 RUN poetry install --no-root --without dev && rm -rf $POETRY_CACHE_DIR
 
 # The runtime image, used to just run the code provided its virtual environment
-FROM python:3.8-slim-buster as runtime
+FROM python:3.10-slim-buster as runtime
 
 RUN apt-get update
 RUN apt-get -y install libpq-dev gcc vim sudo
