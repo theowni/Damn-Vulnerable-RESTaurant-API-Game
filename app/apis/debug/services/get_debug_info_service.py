@@ -1,16 +1,14 @@
-from fastapi import APIRouter, status
-
 import os
 import platform
 import sys
+
 import psutil
+from fastapi import APIRouter, status
 
 router = APIRouter()
 
 
-@router.get(
-    "/debug", status_code=status.HTTP_200_OK
-)
+@router.get("/debug", status_code=status.HTTP_200_OK)
 def get_debug_info_service():
     os_info = {
         "system": platform.system(),

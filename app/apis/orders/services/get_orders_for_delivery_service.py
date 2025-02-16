@@ -21,11 +21,11 @@ def get_orders(
     limit: int = 100,
     db: Session = Depends(get_db),
 ):
-    '''
-    This is a dedicated endpoint for delivery services to integrate with 
-    the Restaurant. Delivery services can use this endpoint to get a list of 
+    """
+    This is a dedicated endpoint for delivery services to integrate with
+    the Restaurant. Delivery services can use this endpoint to get a list of
     latest orders with their details.
-    '''
+    """
     orders = (
         db.query(Order)
         .order_by(Order.date_ordered.desc())
