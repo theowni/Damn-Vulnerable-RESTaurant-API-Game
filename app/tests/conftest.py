@@ -3,14 +3,16 @@ import sys
 from typing import Any, Generator
 
 import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include app dir in sys.path so that we can import from db,main.py
+
+from init_app import init_app
 
 # disable tests caching
 sys.dont_write_bytecode = True
@@ -44,9 +46,7 @@ def override_get_db():
 
 @pytest.fixture(scope="function")
 def app():
-    app = FastAPI()
-    app.include_router(api_router)
-
+    app = init_app()
     return app
 
 
