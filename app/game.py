@@ -191,7 +191,7 @@ print_welcome_screen()
 press_key_to_continue("Click any key to continue...", end="\n\n")
 
 unit_tests_result = get_unit_tests_suite_result()
-while unit_tests_result.stderr:
+while unit_tests_result.returncode != 0 and unit_tests_result.stderr:
     unit_tests_result_out = unit_tests_result.stderr.replace("\n", "\n\r")
     print_color_text(
         unit_tests_result_out,
