@@ -19,6 +19,7 @@ The following is a list of users who have completed all current challenges in th
 | <img src="https://avatars.githubusercontent.com/u/12629081?v=4" width="100px">                                                 | [DarkAlek](https://github.com/DarkAlek/Damn-Vulnerable-RESTaurant-API-Game) | Root Access & Fixed All Vulns | [solution url](https://github.com/DarkAlek/Damn-Vulnerable-RESTaurant-API-Game/blob/6e172dc2e89e01cbe5169c6754dea9ef54106012/SOLUTION_WRITE_UP.md) |
 | <img src="https://avatars.githubusercontent.com/u/29945379?v=4" width="100px"> | [HannoZ](https://github.com/HannoZ/Damn-Vulnerable-RESTaurant-API-Game) | Fixed All Vulns | [solution url](https://github.com/HannoZ/Damn-Vulnerable-RESTaurant-API-Game/blob/main/vulnerability-fixes.md) |
 | <img src="https://avatars.githubusercontent.com/u/82673855?v=4&size=64" width="100px"> | [FedeLu01](https://github.com/FedeLu01/Damn-Vulnerable-RESTaurant-API-Game) | Fixed All Vulns | [solution url](https://github.com/FedeLu01/Damn-Vulnerable-RESTaurant-API-Game/blob/main/vulnerability-fixes.md) |
+| <img src="https://avatars.githubusercontent.com/u/44903767?v=4" width="100px"> | [PinkDraconian](https://github.com/PinkDraconian) | Root Access | [solution url](https://youtu.be/CdVTG3aWTew?si=inmuQ6aFZ-Atipel) |
 
 ## Submitting Your Solution
 
