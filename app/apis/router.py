@@ -4,6 +4,7 @@ from apis.debug.service import router as debug_router
 from apis.healthcheck.service import router as healthcheck_router
 from apis.menu.service import router as menu_router
 from apis.orders.service import router as orders_router
+from apis.referrals.service import router as referrals_router
 from apis.users.service import router as users_router
 from fastapi import APIRouter
 
@@ -17,3 +18,4 @@ api_router.include_router(orders_router, prefix="", tags=["orders"])
 api_router.include_router(auth_router, prefix="", tags=["auth"])
 api_router.include_router(admin_router, prefix="", tags=["admin"])
 api_router.include_router(users_router, prefix="", tags=["users"])
+api_router.include_router(referrals_router, prefix="", tags=["referrals"])

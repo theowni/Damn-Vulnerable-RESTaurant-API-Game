@@ -1,4 +1,5 @@
-from db.models import MenuItem, Order, OrderItem
+from apis.auth.utils import get_password_hash
+from db.models import DiscountCoupon, MenuItem, Order, OrderItem, User, UserRole
 from fastapi import status
 
 
@@ -285,3 +286,291 @@ def test_get_individual_orders(customer_client, test_db):
         assert len(response_json["items"]) == 1
         assert response_json["items"][0]["menu_item_id"] == menu_item.id
         assert response_json["items"][0]["quantity"] == 1
+
+
+def test_create_order_calculates_final_price_without_coupon(customer_client, test_db):
+    """Test that final_price is calculated correctly without a coupon."""
+    menu_item = MenuItem(
+        name="Pizza",
+        price=25.00,
+        category="Pizza",
+        description="Delicious pizza",
+        image_base64="",
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 2}],
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    order_response = response.json()
+
+    # Expected: 25.00 * 2 = 50.00
+    assert order_response.get("final_price") == 50.00
+
+
+def test_create_order_with_valid_coupon_applies_discount(customer_client, test_db):
+    """Test that a valid coupon applies discount to order."""
+    # Create menu item
+    menu_item = MenuItem(
+        name="Burger",
+        price=10.00,
+        category="Burgers",
+        description="Tasty burger",
+        image_base64="",
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    # Create coupon (20% discount) for the customer
+    customer_user = test_db.query(User).filter(User.id == 3).first()
+    coupon = DiscountCoupon(
+        user_id=customer_user.id,
+        referrer_user_id=None,
+        discount_percentage=20,
+        used=False,
+    )
+    test_db.add(coupon)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 1}],
+        "coupon_id": coupon.id,
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    order_response = response.json()
+
+    # Expected: 10.00 * 1 = 10.00, with 20% discount = 10.00 - 2.00 = 8.00
+    assert order_response.get("final_price") == 8.00
+
+
+def test_create_order_with_coupon_marks_coupon_as_used(customer_client, test_db):
+    """Test that applying a coupon marks it as used."""
+    menu_item = MenuItem(
+        name="Pizza",
+        price=20.00,
+        category="Pizza",
+        description="Pizza",
+        image_base64="",
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    customer_user = test_db.query(User).filter(User.id == 3).first()
+    coupon = DiscountCoupon(
+        user_id=customer_user.id,
+        referrer_user_id=None,
+        discount_percentage=10,
+        used=False,
+    )
+    test_db.add(coupon)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 1}],
+        "coupon_id": coupon.id,
+    }
+
+    customer_client.post("/orders", json=order_data)
+
+    # Refresh coupon from database
+    test_db.refresh(coupon)
+
+    assert coupon.used is True
+    assert coupon.used_at is not None
+
+
+def test_create_order_with_already_used_coupon_returns_400(customer_client, test_db):
+    """Test that using an already-used coupon returns 400."""
+    menu_item = MenuItem(
+        name="Item", price=15.00, category="Items", description="Item", image_base64=""
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    customer_user = test_db.query(User).filter(User.id == 3).first()
+    coupon = DiscountCoupon(
+        user_id=customer_user.id,
+        referrer_user_id=None,
+        discount_percentage=15,
+        used=True,  # Already used
+    )
+    test_db.add(coupon)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 1}],
+        "coupon_id": coupon.id,
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert "already been used" in response.json().get("detail")
+
+
+def test_create_order_with_coupon_not_belonging_to_user_returns_404(
+    customer_client, test_db
+):
+    """Test that using someone else's coupon returns 404."""
+    menu_item = MenuItem(
+        name="Item", price=12.00, category="Items", description="Item", image_base64=""
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    # Create coupon for a different user (not customer)
+    other_user = User(
+        id=200,
+        username="other_user",
+        password=get_password_hash("password"),
+        first_name="Other",
+        last_name="User",
+        phone_number="9999",
+        role=UserRole.CUSTOMER,
+    )
+    test_db.add(other_user)
+    test_db.commit()
+
+    coupon = DiscountCoupon(
+        user_id=other_user.id, referrer_user_id=None, discount_percentage=20, used=False
+    )
+    test_db.add(coupon)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 1}],
+        "coupon_id": coupon.id,
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert "Coupon not found" in response.json().get("detail")
+
+
+def test_create_order_with_invalid_coupon_id_returns_404(customer_client, test_db):
+    """Test that using a non-existent coupon returns 404."""
+    menu_item = MenuItem(
+        name="Item", price=10.00, category="Items", description="Item", image_base64=""
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [{"menu_item_id": menu_item.id, "quantity": 1}],
+        "coupon_id": 99999,  # Non-existent coupon
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert "Coupon not found" in response.json().get("detail")
+
+
+def test_create_order_with_multiple_items_calculates_total_price_correctly(
+    customer_client, test_db
+):
+    """Test that final_price is calculated correctly with multiple items and no coupon."""
+    item1 = MenuItem(
+        name="Pizza",
+        price=15.00,
+        category="Pizza",
+        description="Pizza",
+        image_base64="",
+    )
+    item2 = MenuItem(
+        name="Drink",
+        price=5.00,
+        category="Drinks",
+        description="Drink",
+        image_base64="",
+    )
+    test_db.add_all([item1, item2])
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [
+            {"menu_item_id": item1.id, "quantity": 2},
+            {"menu_item_id": item2.id, "quantity": 3},
+        ],
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    order_response = response.json()
+
+    # Expected: (15.00 * 2) + (5.00 * 3) = 30.00 + 15.00 = 45.00
+    assert order_response.get("final_price") == 45.00
+
+
+def test_create_order_with_multiple_items_and_coupon_applies_discount_to_total(
+    customer_client, test_db
+):
+    """Test that discount is applied to the total of all items."""
+    item1 = MenuItem(
+        name="Pizza",
+        price=20.00,
+        category="Pizza",
+        description="Pizza",
+        image_base64="",
+    )
+    item2 = MenuItem(
+        name="Salad",
+        price=10.00,
+        category="Salads",
+        description="Salad",
+        image_base64="",
+    )
+    test_db.add_all([item1, item2])
+    test_db.commit()
+
+    customer_user = test_db.query(User).filter(User.id == 3).first()
+    coupon = DiscountCoupon(
+        user_id=customer_user.id,
+        referrer_user_id=None,
+        discount_percentage=25,  # 25% discount
+        used=False,
+    )
+    test_db.add(coupon)
+    test_db.commit()
+
+    order_data = {
+        "delivery_address": "123 Main St",
+        "phone_number": "555-1234",
+        "items": [
+            {"menu_item_id": item1.id, "quantity": 1},
+            {"menu_item_id": item2.id, "quantity": 1},
+        ],
+        "coupon_id": coupon.id,
+    }
+
+    response = customer_client.post("/orders", json=order_data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    order_response = response.json()
+
+    # Expected: (20.00 + 10.00) = 30.00, with 25% discount = 30.00 - 7.50 = 22.50
+    assert order_response.get("final_price") == 22.50

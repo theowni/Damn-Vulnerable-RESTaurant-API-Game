@@ -149,7 +149,6 @@ def test_reset_password_sets_reset_code_and_returns_200(test_db, anon_client):
 
     data = {
         "username": "customer",
-        "phone_number": "12345678",
     }
     response = anon_client.post("/reset-password", json=data)
 
@@ -163,7 +162,6 @@ def test_reset_password_sets_reset_code_and_returns_200(test_db, anon_client):
 def test_reset_password_with_invalid_data_returns_400(test_db, anon_client):
     data = {
         "username": "invalid_user",
-        "phone_number": "12345678",
     }
     response = anon_client.post("/reset-password", json=data)
 
@@ -185,7 +183,6 @@ def test_reset_password_for_non_customer_returns_400(test_db, anon_client):
 
     data = {
         "username": "employee",
-        "phone_number": "12345678",
     }
     response = anon_client.post("/reset-password", json=data)
 
@@ -194,28 +191,6 @@ def test_reset_password_for_non_customer_returns_400(test_db, anon_client):
         response.json().get("detail")
         == "Only customers can reset their password through this feature"
     )
-
-
-def test_reset_password_with_incorrect_phone_number_returns_400(test_db, anon_client):
-    user = User(
-        username="customer",
-        password="password",
-        first_name="Customer",
-        last_name="",
-        phone_number="12345678",
-        role=UserRole.CUSTOMER,
-    )
-    test_db.add(user)
-    test_db.commit()
-
-    data = {
-        "username": "customer",
-        "phone_number": "12345679",
-    }
-    response = anon_client.post("/reset-password", json=data)
-
-    assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid username or phone number"
 
 
 def test_set_new_password_returns_200(test_db, anon_client):
@@ -234,7 +209,6 @@ def test_set_new_password_returns_200(test_db, anon_client):
 
     data = {
         "username": "customer",
-        "phone_number": "12345678",
         "reset_password_code": "1234",
         "new_password": "new_password",
     }

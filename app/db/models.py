@@ -2,7 +2,17 @@ import datetime
 import enum
 
 from db.base import Base
-from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 
@@ -32,6 +42,7 @@ class User(Base):
     phone_number = Column(String, unique=True, index=True)
     reset_password_code = Column(String, nullable=True)
     reset_password_code_expiry_date = Column(DateTime, nullable=True)
+    referral_code = Column(String, unique=True, index=True, nullable=True)
 
     orders = relationship("Order", back_populates="user")
 
@@ -58,6 +69,7 @@ class Order(Base):
     status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
     delivery_address = Column(String)
     phone_number = Column(String)
+    final_price = Column(Float, default=0.0)
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order")
@@ -72,3 +84,20 @@ class OrderItem(Base):
 
     order = relationship("Order", back_populates="items")
     menu_item = relationship("MenuItem", back_populates="order_items")
+
+
+class DiscountCoupon(Base):
+    __tablename__ = "discount_coupons"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    referrer_user_id = Column(
+        Integer, ForeignKey("users.id"), nullable=True, index=True
+    )
+    discount_percentage = Column(Integer)
+    used = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    used_at = Column(DateTime, nullable=True)
+
+    user = relationship("User", foreign_keys=[user_id])
+    referrer = relationship("User", foreign_keys=[referrer_user_id])

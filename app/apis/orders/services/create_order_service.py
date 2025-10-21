@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from apis.auth.utils import RolesBasedAuthChecker, get_current_user
 from apis.orders import schemas
-from db.models import MenuItem, Order, OrderItem, User, UserRole
+from db.models import DiscountCoupon, MenuItem, Order, OrderItem, User, UserRole
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -18,6 +20,30 @@ def create_order(
     db: Session = Depends(get_db),
     auth=Depends(RolesBasedAuthChecker([UserRole.CUSTOMER])),
 ):
+    coupon = None
+    discount_percentage = 0
+    if order.coupon_id:
+        coupon = (
+            db.query(DiscountCoupon)
+            .filter(DiscountCoupon.id == order.coupon_id)
+            .first()
+        )
+
+        if not coupon or coupon.user_id != current_user.id:
+            raise HTTPException(
+                status_code=404,
+                detail="Coupon not found",
+            )
+
+        if coupon.used:
+            raise HTTPException(
+                status_code=400,
+                detail="Coupon has already been used",
+            )
+        discount_percentage = coupon.discount_percentage
+
+    total_price = 0
+
     db_order = Order(
         user_id=current_user.id,
         delivery_address=order.delivery_address,
@@ -49,7 +75,16 @@ def create_order(
             quantity=item.quantity,
         )
         db.add(order_item)
+        total_price += db_item.price * item.quantity
+
+    db_order.final_price = total_price - (total_price * (discount_percentage / 100))
     db.commit()
     db.refresh(db_order)
+
+    if coupon:
+        coupon.used = True
+        coupon.used_at = datetime.utcnow()
+        db.add(coupon)
+        db.commit()
 
     return db_order

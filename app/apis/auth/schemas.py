@@ -43,13 +43,7 @@ class UserCreate(BaseModel):
     last_name: Union[str, None] = None
 
 
-class ResetPasswordData(BaseModel):
-    username: str
-    phone_number: str
-
-
 class NewPasswordData(BaseModel):
     username: str
-    phone_number: str
     reset_password_code: str
     new_password: str

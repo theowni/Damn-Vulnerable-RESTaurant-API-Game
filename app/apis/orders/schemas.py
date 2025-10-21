@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -24,6 +24,7 @@ class OrderBase(BaseModel):
 
 class OrderCreate(OrderBase):
     items: List[OrderItem] = []
+    coupon_id: Optional[int] = None
 
 
 class Order(OrderBase):
@@ -31,6 +32,7 @@ class Order(OrderBase):
     user_id: int
     items: List[OrderItem] = []
     status: OrderStatus
+    final_price: float
 
     class Config:
-        orm_mode = True
+        from_attributes = True

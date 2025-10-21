@@ -27,12 +27,6 @@ def set_new_password(
             detail="Invalid username or phone number",
         )
 
-    if user.phone_number.replace(" ", "") != data.phone_number.replace(" ", ""):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid username or phone number",
-        )
-
     if not user.reset_password_code:
         raise HTTPException(
             status_code=400,
