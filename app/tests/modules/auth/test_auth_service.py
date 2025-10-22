@@ -166,7 +166,7 @@ def test_reset_password_with_invalid_data_returns_400(test_db, anon_client):
     response = anon_client.post("/reset-password", json=data)
 
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid username or phone number"
+    assert response.json().get("detail") == "Invalid username"
 
 
 def test_reset_password_for_non_customer_returns_400(test_db, anon_client):

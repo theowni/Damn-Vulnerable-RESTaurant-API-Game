@@ -25,7 +25,7 @@ def reset_password(
     if not user:
         raise HTTPException(
             status_code=400,
-            detail="Invalid username or phone number",
+            detail="Invalid username",
         )
     if user.role != UserRole.CUSTOMER:
         raise HTTPException(
