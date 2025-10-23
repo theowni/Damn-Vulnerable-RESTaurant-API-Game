@@ -60,9 +60,6 @@ async def apply_referral_code(
     if referrer is None:
         return ApplyReferralResponse(message="Invalid referral code", discount=0.0)
 
-    # VULNERABILITY: No check if user is applying their own referral
-    # VULNERABILITY: No check if referral has already been applied by this user
-
     discount_coupon = DiscountCoupon(
         user_id=current_user.id,
         referrer_user_id=referrer.id,
