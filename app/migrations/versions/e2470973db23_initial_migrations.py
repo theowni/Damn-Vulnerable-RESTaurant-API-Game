@@ -44,6 +44,7 @@ def upgrade() -> None:
         sa.Column("first_name", sa.String(), nullable=True),
         sa.Column("last_name", sa.String(), nullable=True),
         sa.Column("phone_number", sa.String(), nullable=True),
+        sa.Column("referral_code", sa.String(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(op.f("ix_users_id"), "users", ["id"], unique=False)
@@ -51,6 +52,7 @@ def upgrade() -> None:
         op.f("ix_users_phone_number"), "users", ["phone_number"], unique=True
     )
     op.create_index(op.f("ix_users_username"), "users", ["username"], unique=True)
+    op.create_index(op.f("ix_users_referral_code"), "users", ["referral_code"], unique=True)
     op.create_table(
         "orders",
         sa.Column("id", sa.Integer(), nullable=False),
