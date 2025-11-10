@@ -574,3 +574,107 @@ def test_create_order_with_multiple_items_and_coupon_applies_discount_to_total(
 
     # Expected: (20.00 + 10.00) = 30.00, with 25% discount = 30.00 - 7.50 = 22.50
     assert order_response.get("final_price") == 22.50
+
+
+def test_get_order_status_returns_200_for_customer(customer_client, test_db):
+    """Test that get_order_status endpoint successfully returns order status."""
+    # Create a menu item and order
+    menu_item = MenuItem(
+        name="Pasta",
+        price=12.99,
+        category="Main",
+        description="Delicious pasta",
+        image_base64="",
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    order = Order(
+        delivery_address="456 Test St",
+        phone_number="555-9999",
+        user_id=3,
+        status="Pending",
+    )
+    test_db.add(order)
+    test_db.commit()
+
+    order_item = OrderItem(order_id=order.id, menu_item_id=menu_item.id, quantity=1)
+    test_db.add(order_item)
+    test_db.commit()
+
+    # Call the order status endpoint
+    response = customer_client.get(f"/orders/status/{order.id}")
+
+    assert response.status_code == status.HTTP_200_OK
+    response_json = response.json()
+    assert response_json.get("order_id") == order.id
+    assert response_json.get("status") == "ON_THE_WAY"  # From the simulated service
+
+
+def test_get_order_status_returns_401_for_unauthenticated(anon_client, test_db):
+    """Test that unauthenticated users cannot access order status endpoint."""
+    order = Order(
+        delivery_address="789 Test Ave",
+        phone_number="555-8888",
+        user_id=1,
+        status="Pending",
+    )
+    test_db.add(order)
+    test_db.commit()
+
+    response = anon_client.get(f"/orders/status/{order.id}")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.json().get("detail") == "Not authenticated"
+
+
+def test_get_order_status_customer_cannot_access_other_customers_order(
+    customer_client, test_db
+):
+    """Test that customer X cannot access customer Y's order status."""
+    # Create another customer (customer Y)
+    other_customer = User(
+        id=999,
+        username="other_customer",
+        password=get_password_hash("password"),
+        first_name="Other",
+        last_name="Customer",
+        phone_number="555-0000",
+        role=UserRole.CUSTOMER,
+    )
+    test_db.add(other_customer)
+    test_db.commit()
+
+    # Create a menu item
+    menu_item = MenuItem(
+        name="Burger",
+        price=9.99,
+        category="Main",
+        description="Tasty burger",
+        image_base64="",
+    )
+    test_db.add(menu_item)
+    test_db.commit()
+
+    # Create an order for customer Y (user_id=999)
+    other_customer_order = Order(
+        delivery_address="999 Other St",
+        phone_number="555-0000",
+        user_id=999,
+        status="Pending",
+    )
+    test_db.add(other_customer_order)
+    test_db.commit()
+
+    order_item = OrderItem(
+        order_id=other_customer_order.id, menu_item_id=menu_item.id, quantity=1
+    )
+    test_db.add(order_item)
+    test_db.commit()
+
+    # Customer X (id=3) tries to access customer Y's order (id=999)
+    response = customer_client.get(f"/orders/status/{other_customer_order.id}")
+
+    # Should return 404 since the order doesn't belong to customer X
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json().get("detail") == "Order not found"
