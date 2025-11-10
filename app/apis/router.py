@@ -6,6 +6,7 @@ from apis.menu.service import router as menu_router
 from apis.orders.service import router as orders_router
 from apis.referrals.service import router as referrals_router
 from apis.users.service import router as users_router
+from config import ENV, ENVIRONMENT
 from fastapi import APIRouter
 
 api_router = APIRouter()
