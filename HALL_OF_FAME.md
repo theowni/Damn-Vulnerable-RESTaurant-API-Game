@@ -20,6 +20,7 @@ The following is a list of users who have completed all current challenges in th
 | <img src="https://avatars.githubusercontent.com/u/29945379?v=4" width="100px"> | [HannoZ](https://github.com/HannoZ/Damn-Vulnerable-RESTaurant-API-Game) | Fixed All Vulns | [solution url](https://github.com/HannoZ/Damn-Vulnerable-RESTaurant-API-Game/blob/main/vulnerability-fixes.md) |
 | <img src="https://avatars.githubusercontent.com/u/82673855?v=4&size=64" width="100px"> | [FedeLu01](https://github.com/FedeLu01/Damn-Vulnerable-RESTaurant-API-Game) | Fixed All Vulns | [solution url](https://github.com/FedeLu01/Damn-Vulnerable-RESTaurant-API-Game/blob/main/vulnerability-fixes.md) |
 | <img src="https://avatars.githubusercontent.com/u/44903767?v=4" width="100px"> | [PinkDraconian](https://github.com/PinkDraconian) | Root Access | [solution url](https://youtu.be/CdVTG3aWTew?si=inmuQ6aFZ-Atipel) |
+| <img src="https://avatars.githubusercontent.com/u/64075511?v=4" width="100px"> | [Soham7-dev](https://github.com/Soham7-dev) | Root Access | [solution url](https://medium.com/@sohamdas334/damn-vulnerable-restaurant-game-walkthrough-root-access-f0fdf5ae9b62) |
 
 ## Submitting Your Solution
 
