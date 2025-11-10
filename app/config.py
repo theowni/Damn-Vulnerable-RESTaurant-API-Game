@@ -15,7 +15,7 @@ class ENV(Enum):
     TESTING = "testing"
 
 
-ENVIRONMENT = os.getenv("ENV", ENV.PRODUCTION)
+ENVIRONMENT = ENV(os.getenv("ENV", ENV.PRODUCTION.value))
 
 
 # 6 digits random secrets are secure enough,
