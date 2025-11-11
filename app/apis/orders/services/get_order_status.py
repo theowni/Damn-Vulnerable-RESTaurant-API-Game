@@ -1,6 +1,6 @@
 from apis.auth.utils import get_current_user
 from apis.orders.utils import fetch_order_status_from_delivery_service
-from db.models import Order, User
+from db.models import Order, OrderStatus, User
 from db.session import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
