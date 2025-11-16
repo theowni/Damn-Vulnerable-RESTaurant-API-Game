@@ -1,3 +1,6 @@
+*For theoretical materials, quizzes, vulnerability descriptions, walkthroughs with practical challenges, I recommend my project [API Security Champion](https://apisecuritychampion.com/?utm_source=github&utm_medium=dvr_readme).*
+
+---
 
 ![Damn Vulnerable RESTaurant Logo](app/static/img/mad-chef-circle-text.png)
 
