@@ -3,6 +3,7 @@ from init_app import init_app
 
 
 def start_application():
+    print("starting the app now...")
     app = init_app()
     load_initial_data()
     return app
