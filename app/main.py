@@ -12,6 +12,14 @@ def setup_static_files_and_docs(app: FastAPI):
     """Setup static files and custom documentation endpoints with favicon"""
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
+    @app.get("/", include_in_schema=False)
+    def root_docs():
+        return get_swagger_ui_html(
+            openapi_url=f"{app.root_path}/openapi.json",
+            title=settings.TITLE,
+            swagger_favicon_url=f"{app.root_path}/static/img/favicon-32x32.png",
+        )
+
     @app.get("/docs", include_in_schema=False)
     def overridden_swagger():
         return get_swagger_ui_html(
