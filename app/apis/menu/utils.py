@@ -2,7 +2,7 @@ import base64
 
 import requests
 from apis.menu import schemas
-from db.models import MenuItem
+from db.models import MenuItem, OrderItem
 from fastapi import HTTPException
 
 
@@ -56,6 +56,15 @@ def update_menu_item(
 
 
 def delete_menu_item(db, item_id: int):
+    existing_order_item = (
+        db.query(OrderItem).filter(OrderItem.menu_item_id == item_id).first()
+    )
+    if existing_order_item is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="You can not delete this menu item, it is associated with existing orders.",
+        )
+
     db_item = db.query(MenuItem).filter(MenuItem.id == item_id).first()
     if db_item is None:
         raise HTTPException(status_code=404, detail="Menu item not found")

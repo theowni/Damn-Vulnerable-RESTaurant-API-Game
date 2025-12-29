@@ -1,4 +1,5 @@
 from apis.router import api_router
+from config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from rate_limiting import limiter
@@ -8,10 +9,13 @@ from slowapi.errors import RateLimitExceeded
 
 def init_app():
     app = FastAPI(
-        title="Damn Vulnerable RESTaurant",
-        description="An intentionally vulnerable API service designed for learning and training purposes for ethical hackers, security engineers, and developers.",
-        version="1.0.0",
-        servers=[{"url": "http://localhost:8091", "description": "Local API server"}],
+        title=settings.TITLE,
+        description=settings.DESCRIPTION,
+        version=settings.VERSION,
+        servers=settings.SERVERS,
+        root_path=settings.ROOT_PATH,
+        docs_url=None,
+        redoc_url=None,
     )
     app.add_middleware(
         CORSMiddleware,

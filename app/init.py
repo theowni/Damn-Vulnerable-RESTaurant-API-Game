@@ -5,7 +5,7 @@ from apis.auth.utils import create_user_if_not_exists
 from apis.menu.schemas import MenuItemCreate
 from apis.menu.utils import create_menu_item
 from config import settings
-from db.models import User, UserRole
+from db.models import MenuItem, Order, OrderItem, OrderStatus, User, UserRole
 from db.session import get_db
 from sqlalchemy.orm import Session
 
@@ -52,6 +52,24 @@ def load_users(db: Session):
         first_name="Howard",
         last_name="Hamlin",
         phone_number="(505) 56434-7345",
+        role=UserRole.CUSTOMER,
+    )
+    create_user_if_not_exists(
+        db,
+        username="johndoe",
+        password="password123",
+        first_name="John",
+        last_name="Doe",
+        phone_number="(505) 56434-7346",
+        role=UserRole.CUSTOMER,
+    )
+    create_user_if_not_exists(
+        db,
+        username="alicesmith",
+        password="password456",
+        first_name="Alice",
+        last_name="Smith",
+        phone_number="(505) 53436-7347",
         role=UserRole.CUSTOMER,
     )
 
@@ -193,6 +211,132 @@ def load_menu(db: Session):
     )
 
 
+def load_orders(db: Session):
+    # Get users
+    alice = db.query(User).filter(User.username == "alicesmith").first()
+    john = db.query(User).filter(User.username == "johndoe").first()
+
+    if not alice or not john:
+        return
+
+    # Use only menu items with IDs 6 to 10
+    menu_items = (
+        db.query(MenuItem)
+        .filter(MenuItem.id.in_([6, 7, 8, 9, 10]))
+        .order_by(MenuItem.id.asc())
+        .all()
+    )
+    if len(menu_items) != 5:
+        return
+
+    # Create first order for alicesmith
+    order1 = Order(
+        user_id=alice.id,
+        delivery_address="308 Negra Arroyo Lane, Albuquerque, NM 87104",
+        phone_number=alice.phone_number,
+        final_price=0.0,
+        status=OrderStatus.DELIVERED,
+    )
+    db.add(order1)
+    db.commit()
+    db.refresh(order1)
+
+    # Add items to first order for alice (2 items)
+    total_price1 = 0.0
+    order_item1 = OrderItem(
+        order_id=order1.id,
+        menu_item_id=menu_items[0].id,
+        quantity=2,
+    )
+    db.add(order_item1)
+    total_price1 += menu_items[0].price * 2
+
+    order_item2 = OrderItem(
+        order_id=order1.id,
+        menu_item_id=menu_items[1].id,
+        quantity=1,
+    )
+    db.add(order_item2)
+    total_price1 += menu_items[1].price * 1
+
+    order1.final_price = total_price1
+    db.commit()
+
+    # Create second order for alicesmith
+    order2 = Order(
+        user_id=alice.id,
+        delivery_address="308 Negra Arroyo Lane, Albuquerque, NM 87104",
+        phone_number=alice.phone_number,
+        final_price=0.0,
+        status=OrderStatus.DELIVERED,
+    )
+    db.add(order2)
+    db.commit()
+    db.refresh(order2)
+
+    # Add items to second order for alice (3 items)
+    total_price2 = 0.0
+    order_item3 = OrderItem(
+        order_id=order2.id,
+        menu_item_id=menu_items[2].id,
+        quantity=1,
+    )
+    db.add(order_item3)
+    total_price2 += menu_items[2].price * 1
+
+    order_item4 = OrderItem(
+        order_id=order2.id,
+        menu_item_id=menu_items[3].id,
+        quantity=2,
+    )
+    db.add(order_item4)
+    total_price2 += menu_items[3].price * 2
+
+    order_item5 = OrderItem(
+        order_id=order2.id,
+        menu_item_id=menu_items[4].id,
+        quantity=1,
+    )
+    db.add(order_item5)
+    total_price2 += menu_items[4].price * 1
+
+    order2.final_price = total_price2
+    db.commit()
+
+    # Create order for johndoe
+    order3 = Order(
+        user_id=john.id,
+        delivery_address="1650 Central Ave SE, Albuquerque, NM 87106",
+        phone_number=john.phone_number,
+        final_price=0.0,
+        status=OrderStatus.DELIVERED,
+    )
+    db.add(order3)
+    db.commit()
+    db.refresh(order3)
+
+    # Add items to order for john (2 items)
+    total_price3 = 0.0
+    order_item6 = OrderItem(
+        order_id=order3.id,
+        menu_item_id=menu_items[0].id,
+        quantity=3,
+    )
+    db.add(order_item6)
+    total_price3 += menu_items[0].price * 3
+
+    order_item7 = OrderItem(
+        order_id=order3.id,
+        menu_item_id=menu_items[2].id,
+        quantity=1,
+    )
+    db.add(order_item7)
+    total_price3 += menu_items[2].price * 1
+
+    order3.final_price = total_price3
+    db.commit()
+
+
 def load_initial_data():
     db = next(get_db())
 
@@ -204,3 +348,4 @@ def load_initial_data():
 
     load_users(db)
     load_menu(db)
+    load_orders(db)

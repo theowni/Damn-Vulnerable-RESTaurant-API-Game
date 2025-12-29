@@ -1,6 +1,7 @@
 import os
 import random
 from pathlib import Path
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -36,7 +37,40 @@ class Settings:
     POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
     POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", 5432)
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "restaurant")
-    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
+
+    TITLE: str = "Damn Vulnerable RESTaurant"
+    DESCRIPTION: str = (
+        "An intentionally vulnerable API service designed for learning and training purposes for ethical hackers, security engineers"
+        ", and developers."
+    )
+    VERSION: str = "1.0.0"
+
+    # Allow switching between Postgres (default) and in-memory SQLite.
+    # This keeps Postgres as the default behavior while enabling
+    # self-contained in-memory runs when DB_BACKEND=memory is set.
+    DB_BACKEND: str = os.getenv("DB_BACKEND", "postgres")
+
+    @property
+    def DATABASE_URL(self) -> str:
+        if self.DB_BACKEND == "memory":
+            return "sqlite://"
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+    @property
+    def SERVER_URL(self) -> str:
+        return "http://localhost:8091/"
+
+    @property
+    def SERVERS(self) -> list[dict]:
+        return [{"url": self.SERVER_URL, "description": self.SERVER_DESCRIPTION}]
+
+    @property
+    def ROOT_PATH(self) -> str:
+        return ""
+
+    @property
+    def SERVER_DESCRIPTION(self) -> str:
+        return "Local API server"
 
 
 settings = Settings()
